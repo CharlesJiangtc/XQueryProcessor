@@ -207,6 +207,18 @@ public interface XpathListener extends ParseTreeListener {
 	 */
 	void exitFilter_and(XpathParser.Filter_andContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code filter_bracket}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilter_bracket(XpathParser.Filter_bracketContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code filter_bracket}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilter_bracket(XpathParser.Filter_bracketContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code filter_parent}
 	 * labeled alternative in {@link XpathParser#filter}.
 	 * @param ctx the parse tree
@@ -230,6 +242,18 @@ public interface XpathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFilter_is(XpathParser.Filter_isContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code filter_txt}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilter_txt(XpathParser.Filter_txtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code filter_txt}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilter_txt(XpathParser.Filter_txtContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code filter_equal}
 	 * labeled alternative in {@link XpathParser#filter}.
@@ -266,4 +290,14 @@ public interface XpathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFilter_not(XpathParser.Filter_notContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XpathParser#txt}.
+	 * @param ctx the parse tree
+	 */
+	void enterTxt(XpathParser.TxtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XpathParser#txt}.
+	 * @param ctx the parse tree
+	 */
+	void exitTxt(XpathParser.TxtContext ctx);
 }

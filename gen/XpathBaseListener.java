@@ -219,6 +219,18 @@ public class XpathBaseListener implements XpathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFilter_bracket(XpathParser.Filter_bracketContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFilter_bracket(XpathParser.Filter_bracketContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFilter_parent(XpathParser.Filter_parentContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -238,6 +250,18 @@ public class XpathBaseListener implements XpathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFilter_is(XpathParser.Filter_isContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFilter_txt(XpathParser.Filter_txtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFilter_txt(XpathParser.Filter_txtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -274,6 +298,18 @@ public class XpathBaseListener implements XpathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFilter_not(XpathParser.Filter_notContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTxt(XpathParser.TxtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTxt(XpathParser.TxtContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -2,9 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fd9ad118-4077-4cfc-8bcc-bcaed2636c37" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Xpath.g4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gen/MyVisitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gen/Xpath.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gen/s_caesar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Xpath.g4" beforeDir="false" afterPath="$PROJECT_DIR$/Xpath.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/MyVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/MyVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Xpath.interp" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Xpath.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Xpath.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Xpath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/Xpath.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Xpath.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathBaseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathBaseListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathBaseVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathLexer.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathLexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathLexer.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/XpathVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,11 +36,16 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/gen" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\charl\Desktop\XQueryProcessor\gen" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
@@ -53,6 +70,8 @@
       <updated>1611893015664</updated>
       <workItem from="1611893018273" duration="7000" />
       <workItem from="1611895997288" duration="8027000" />
+      <workItem from="1611944125007" duration="44000" />
+      <workItem from="1611944187271" duration="34561000" />
     </task>
     <servers />
   </component>
@@ -69,5 +88,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
