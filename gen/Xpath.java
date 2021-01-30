@@ -10,8 +10,8 @@ import org.w3c.dom.Node;
 public class Xpath {
     public static void main(String[] args) {
         //read input
-        String test = "doc(\"j_caesar.xml\")//text()";
-        System.out.println(test);
+        String test = "doc(\"j_caesar.xml\")/PLAY";
+
         ANTLRInputStream antlrIS = new ANTLRInputStream(test);
         System.out.println("flag1");
 
@@ -26,7 +26,7 @@ public class Xpath {
         MyVisitor visitor = new MyVisitor();
         ArrayList<Node> result = visitor.visit(pTree);
         System.out.println("flag3");
-
+        System.out.println(result.size());
     }
 
 }
