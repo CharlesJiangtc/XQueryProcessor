@@ -127,13 +127,6 @@ public interface XpathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFilter_and(XpathParser.Filter_andContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code filter_bracket}
-	 * labeled alternative in {@link XpathParser#filter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFilter_bracket(XpathParser.Filter_bracketContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code filter_parent}
 	 * labeled alternative in {@link XpathParser#filter}.
 	 * @param ctx the parse tree
@@ -175,10 +168,4 @@ public interface XpathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFilter_not(XpathParser.Filter_notContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link XpathParser#txt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTxt(XpathParser.TxtContext ctx);
 }

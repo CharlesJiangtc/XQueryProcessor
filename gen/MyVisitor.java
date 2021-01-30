@@ -40,7 +40,7 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
         System.out.println("in visitDoc()");
 
         File inputDoc = new File(System.getProperty("user.dir") + "/" + ctx.filename().getText());
-        System.out.println(inputDoc.getName());
+//        System.out.println(inputDoc.getName());
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -90,17 +90,22 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
 
     @Override public ArrayList<Node> visitRp_attName(XpathParser.Rp_attNameContext ctx) {
-        System.out.println("in visitRp_txt()");
+        System.out.println("in visitRp_att() : " + ctx.TAGNAME().getText());
+
+//        System.out.println("starting size : " + currNodes.size());
 
         ArrayList<Node> res = new ArrayList<Node>();
-        for (Node n : getChildren(currNodes)) {
-//            System.out.println(n.getNodeType());
-            if (n.getNodeType() == attrNodeTypeCode) {
-                res.add(n);
-//                System.out.println("attr Node" + n.getNodeValue());
+
+        for (Node n : currNodes) {
+//            System.out.println("type : " + n.getNodeType() + ", name : " + n.getNodeName() + ", attr : " + n.getAttributes());
+
+            if (n.getAttributes() != null && n.getAttributes().getNamedItem(ctx.TAGNAME().getText()) != null) {
+                res.add(n.getAttributes().getNamedItem(ctx.TAGNAME().getText()));
             }
         }
         currNodes = res;
+//        System.out.println("result size : " + currNodes.size());
+
         return currNodes;
     }
 
@@ -154,18 +159,21 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
     @Override public ArrayList<Node> visitRp_tagName(XpathParser.Rp_tagNameContext ctx) {
         System.out.println("in visitRp_tagName() : " + ctx.getText());
-//        System.out.println(ctx.getText());
+//        System.out.println(ctx.getText().trim().length());
+//        System.out.println(ctx.TAGNAME().getText().length());
 
+//        System.out.println("starting size : " + currNodes.size());
         ArrayList<Node> res = new ArrayList<Node>();
 
         for (Node n : getChildren(currNodes)) {
-            if (n.getNodeType() == elementNodeTypeCode && n.getNodeName().equals(ctx.getText())) {
+            if (n.getNodeType() == elementNodeTypeCode && n.getNodeName().equals(ctx.getText().trim())) {
                 res.add(n);
             }
         }
 
         currNodes = res;
-//        printNodeList(currNodes);
+        printNodeList(currNodes);
+//        System.out.println("result size : " + currNodes.size());
 
         return currNodes;
     }
@@ -210,7 +218,8 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
 
     @Override public ArrayList<Node> visitFilter_rp(XpathParser.Filter_rpContext ctx) {
-        System.out.println("in visitFilter_rp() : " + ctx.rp());
+        System.out.println("in visitFilter_rp() : " + ctx.rp().getText());
+        printNodeList(currNodes);
 
         ArrayList<Node> res = new ArrayList<Node>();
         ArrayList<Node> prevNodes = currNodes;
@@ -224,6 +233,7 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
             }
         }
         currNodes = res;
+        printNodeList(currNodes);
         return currNodes;
     }
 
@@ -294,10 +304,10 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
     @Override public ArrayList<Node> visitFilter_txt(XpathParser.Filter_txtContext ctx) {
         System.out.println("in visitFilter_txt()");
-//        System.out.println(ctx.txt().getText());
+//        System.out.println(ctx.STRING().getText());
 
-        String ctxText = ctx.txt().getText().substring(1, ctx.txt().getText().length()-1);
-//        System.out.println(ctxText);
+        String ctxText = ctx.STRING().getText().substring(1, ctx.STRING().getText().length()-1);
+        System.out.println(ctxText);
 
 //        printNodeList(currNodes);
         ArrayList<Node> prevNodes = currNodes;
@@ -310,6 +320,15 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
             ArrayList<Node> left = visit(ctx.rp());
             System.out.println(left.size());
             for (Node l : left) {
+//                System.out.println("left node type : " + l.getNodeType());
+//
+//                if (l.getNodeType() == textNodeTypeCode && l.getNodeValue().equals(ctxText)) {
+//                    res.add(n);
+//                }
+//                else if (l.getNodeType() == attrNodeTypeCode && l.getNodeValue().equals(ctxText)) {
+//                    System.out.println("attr node value : " + l.getNodeValue());
+//                    res.add(n);
+//                }
                 if (l.getNodeValue().equals(ctxText)) {
                     res.add(n);
                 }
@@ -332,14 +351,14 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
             ArrayList<Node> tmp = new ArrayList<Node>();
             tmp.add(n);
             currNodes = tmp;
-            System.out.println("visiting left...");
+//            System.out.println("visiting left...");
             ArrayList<Node> left = visit(ctx.rp(0));
             currNodes = tmp;
-            System.out.println("visiting right...");
+//            System.out.println("visiting right...");
             ArrayList<Node> right = visit(ctx.rp(1));
-            System.out.println("back to filter_eq");
-            System.out.println(left.size());
-            System.out.println(right.size());
+//            System.out.println("back to filter_eq");
+//            System.out.println(left.size());
+//            System.out.println(right.size());
             for (Node l : left) {
                 for (Node r : right) {
                     if (l.isEqualNode(r)) {
@@ -408,21 +427,14 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
         return currNodes;
     }
 
-    @Override public ArrayList<Node> visitFilter_bracket(XpathParser.Filter_bracketContext ctx) {
-        System.out.println("in visitFilter_bracket()");
-
-        return visitChildren(ctx);
-    }
-
-
 
     //===================helper methods=============================
     private void printNodeList(ArrayList<Node> nodes) {
-        System.out.println("=========printing all current nodes===========");
-        for (Node n : nodes) {
-            System.out.println(n.getNodeName());
-        }
-        System.out.println("=========done===========");
+//        System.out.println("=========printing all current nodes===========");
+//        for (Node n : nodes) {
+//            System.out.println(n.getNodeName());
+//        }
+//        System.out.println("=========done===========");
     }
 
     private ArrayList<Node> getAll(ArrayList<Node> parentNodes) {

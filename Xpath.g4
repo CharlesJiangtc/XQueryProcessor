@@ -1,6 +1,6 @@
 grammar Xpath;
 
-WS   : [ \t\r\n]* -> skip;
+WS   : [ \t\r\n]+ -> skip;
 ap
     : doc '/' rp            #ap_children
     | doc '//' rp           #ap_all
@@ -17,7 +17,7 @@ rp
     | '.'                   #rp_sibling
     | '..'                  #rp_parent
     | TEXT                  #rp_txt
-    | '@' ATTRIBNAME        #rp_attName
+    | '@' TAGNAME           #rp_attName
     | '(' rp ')'            #rp_self
     | rp '/' rp             #rp_children
     | rp '//' rp            #rp_all
@@ -34,17 +34,16 @@ filter
     |   rp '==' rp          #filter_is
     |   rp 'is' rp          #filter_is
     |   '(' filter ')'      #filter_parent
-    |   rp '=' txt          #filter_txt
+    |   rp '=' STRING       #filter_txt
     |   filter 'and' filter #filter_and
     |   filter 'or' filter  #filter_or
     |   'not' filter        #filter_not
     ;
 
-TAGNAME : [ a-zA-Z_]+;
+TAGNAME : [a-zA-Z_]+;
 
-ATTRIBNAME:  [ a-zA-Z0-9_]+;
+ATTRIBNAME:  [a-zA-Z_]+;
 
-txt : STRING;
-STRING: ["][ a-zA-Z0-9]*["];
+STRING: ["][a-zA-Z0-9]*["];
 
 
