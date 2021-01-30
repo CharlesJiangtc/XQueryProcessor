@@ -1,11 +1,5 @@
-// Generated from E:/ucsd/winter2020/cse232b/XQueryProcessor/milestone/.idea\Xpath.g4 by ANTLR 4.9.1
-package ms1;
-
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/milestone1/.idea\Xpath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
@@ -34,7 +28,7 @@ public interface XpathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDoc(XpathParser.DocContext ctx) throws ParserConfigurationException, IOException, SAXException;
+	T visitDoc(XpathParser.DocContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link XpathParser#filename}.
 	 * @param ctx the parse tree
@@ -146,6 +140,13 @@ public interface XpathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFilter_is(XpathParser.Filter_isContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code filter_txt}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFilter_txt(XpathParser.Filter_txtContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code filter_equal}
 	 * labeled alternative in {@link XpathParser#filter}.

@@ -1,6 +1,4 @@
-// Generated from E:/ucsd/winter2020/cse232b/XQueryProcessor/milestone/.idea\Xpath.g4 by ANTLR 4.9.1
-package ms1;
-
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/milestone1/.idea\Xpath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -232,6 +230,18 @@ public interface XpathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFilter_is(XpathParser.Filter_isContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code filter_txt}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilter_txt(XpathParser.Filter_txtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code filter_txt}
+	 * labeled alternative in {@link XpathParser#filter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilter_txt(XpathParser.Filter_txtContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code filter_equal}
 	 * labeled alternative in {@link XpathParser#filter}.

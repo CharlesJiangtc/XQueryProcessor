@@ -1,11 +1,5 @@
-// Generated from E:/ucsd/winter2020/cse232b/XQueryProcessor/milestone/.idea\Xpath.g4 by ANTLR 4.9.1
-package ms1;
-
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/milestone1/.idea\Xpath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 /**
  * This class provides an empty implementation of {@link XpathVisitor},
@@ -36,7 +30,7 @@ public class XpathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDoc(XpathParser.DocContext ctx) throws ParserConfigurationException, IOException, SAXException { return visitChildren(ctx); }
+	@Override public T visitDoc(XpathParser.DocContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -149,6 +143,13 @@ public class XpathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitFilter_is(XpathParser.Filter_isContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitFilter_txt(XpathParser.Filter_txtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

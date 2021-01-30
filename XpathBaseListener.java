@@ -1,5 +1,4 @@
-// Generated from E:/ucsd/winter2020/cse232b/XQueryProcessor/milestone/.idea\Xpath.g4 by ANTLR 4.9.1
-package ms1;
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/milestone1/.idea\Xpath.g4 by ANTLR 4.9.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -239,6 +238,18 @@ public class XpathBaseListener implements XpathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFilter_is(XpathParser.Filter_isContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFilter_txt(XpathParser.Filter_txtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFilter_txt(XpathParser.Filter_txtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

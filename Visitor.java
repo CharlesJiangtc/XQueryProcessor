@@ -1,10 +1,11 @@
-package ms1;
 
 import java.io.IOException;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,15 +27,40 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     ArrayList<Node> descendant = new ArrayList<>();
     ArrayList<Node> allnode = new ArrayList<>();
     boolean all = false;
+    Document doc = null;
+
+    public ArrayList<Node> removeDup(ArrayList<Node> temp){
+        for(Node t : temp){
+            for(int i=(temp.indexOf(t)+1); i<temp.size(); i++){
+                //System.out.println(t.isSameNode(temp.get(i)));
+                if(t.isSameNode(temp.get(i))){
+                    temp.remove(t);
+                    break;
+                }
+            }
+        }
+        return temp;
+    }
 
     //done
     @Override
-    public ArrayList<Node> visitDoc(XpathParser.DocContext ctx) throws ParserConfigurationException, IOException, SAXException {
+    public ArrayList<Node> visitDoc(XpathParser.DocContext ctx){
         File DOMtree = new File(ctx.filename().getText());
         //String filename = ctx.filename().getText();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(DOMtree);
+        DocumentBuilder db = null;
+        try {
+            db = dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        try {
+            doc = db.parse(DOMtree);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (doc != null) {
             doc.getDocumentElement().normalize();
         }
@@ -51,10 +77,9 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         ArrayList<Node> temp = new ArrayList<>();
         int num = descendant.get(0).getChildNodes().getLength();
         for (int i = 0; i < num; i++) {
-            if (descendant.get(0).getChildNodes().item(i).getNodeName() == ctx.getText()) {
-                temp.add(descendant.get(0).getChildNodes().item(i));
-            }
+            temp.add(descendant.get(0).getChildNodes().item(i));
         }
+        temp = removeDup(temp);
         descendant = temp;
         all = false;
         return visit(ctx.rp());
@@ -67,10 +92,11 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         ArrayList<Node> temp = new ArrayList<>();
         int num = descendant.get(0).getChildNodes().getLength();
         for (int i = 0; i < num; i++) {
-            if (descendant.get(0).getChildNodes().item(i).getNodeName() == ctx.getText()) {
+            if(descendant.get(0).getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
                 temp.add(descendant.get(0).getChildNodes().item(i));
             }
         }
+        temp = removeDup(temp);
         descendant = temp;
         all = true;
         return visit(ctx.rp());
@@ -81,18 +107,20 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     public ArrayList<Node> visitRp_tagName(XpathParser.Rp_tagNameContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
         if(all){
+            temp.addAll(descendant);
             temp = getAllnode(temp);
             allnode = temp;
-            temp.removeIf(t -> !t.getNodeName().equals(ctx.getText()));
-            descendant.addAll(temp);
+            temp.removeIf(t -> !t.getNodeName().equals(ctx.TAGNAME().getText()));
+            descendant = temp;
             all = false;
         }
         else {
             for (Node des : descendant) {
                 int num = des.getChildNodes().getLength();
                 for (int i = 0; i < num; i++) {
-                    if (des.getChildNodes().item(i).getNodeName().equals(ctx.getText())) {
+                    if (des.getChildNodes().item(i).getNodeName().equals(ctx.TAGNAME().getText())) {
                         temp.add(des.getChildNodes().item(i));
+                        //System.out.println(des + ctx.TAGNAME().getText());
                     }
                 }
             }
@@ -101,19 +129,23 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         return temp;
     }
 
-    public ArrayList<Node> getAllnode (ArrayList<Node> temp){
-        ArrayList<Node> cur = new ArrayList<>();
-        for (Node t : temp) {
+    public ArrayList<Node> getAllnode (ArrayList<Node> parent){
+        ArrayList<Node> temp = new ArrayList<>();
+        for (Node t : parent) {
             int num = t.getChildNodes().getLength();
             if(num == 0){
                 break;
             }
             for (int i = 0; i < num; i++){
-                cur.add(t.getChildNodes().item(i));
-                cur = getAllnode(cur);
-                temp.addAll(cur);
+                ArrayList<Node> children = new ArrayList<>();
+                if(t.getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    children.add(t.getChildNodes().item(i));
+                    children.addAll(getAllnode(children));
+                }
+                temp.addAll(children);
             }
         }
+        temp = removeDup(temp);
         return temp;
     }
 
@@ -127,13 +159,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
                 temp.add(des.getChildNodes().item(i));
             }
         }
-        if(all){
-            descendant.addAll(temp);
-        }
-        else {
-            descendant = temp;
-        }
-        all = false;
+        descendant = temp;
         return temp;
     }
 
@@ -150,13 +176,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         for(Node des : descendant) {
             temp.add(des.getParentNode());
         }
-        if(all){
-            descendant.addAll(temp);
-        }
-        else {
-            descendant = temp;
-        }
-        all = false;
+        descendant = temp;
         return temp;
     }
 
@@ -165,20 +185,15 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     public ArrayList<Node> visitRp_txt(XpathParser.Rp_txtContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
         for (Node des : descendant) {
+            System.out.println("getting text from " + des);
             int num = des.getChildNodes().getLength();
             for(int i=0; i<num; i++) {
-                if (des.getChildNodes().item(i).getNodeType() == Node.TEXT_NODE) {
-                    temp.add(des);
+                if (des.getChildNodes().item(i).getNodeType() == Node.TEXT_NODE && !des.getChildNodes().item(i).getTextContent().equals("\n")) {
+                    temp.add(des.getChildNodes().item(i));
                 }
             }
         }
-        if(all){
-            descendant.addAll(temp);
-        }
-        else {
-            descendant = temp;
-        }
-        all = false;
+        descendant = temp;
         return temp;
     }
 
@@ -187,18 +202,14 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     public ArrayList<Node> visitRp_attName(XpathParser.Rp_attNameContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
         for (Node des : descendant) {
-            Element desc = (Element) des;
-            if (desc.getAttribute(ctx.NAME().getText()) != null) {
-                temp.add(des);
+            int num = des.getChildNodes().getLength();
+            for(int i=0; i<num; i++) {
+                if (des.getChildNodes().item(i).getNodeType() == Node.ATTRIBUTE_NODE && !des.getChildNodes().item(i).getTextContent().equals("\n")) {
+                    temp.add(des.getChildNodes().item(i));
+                }
             }
         }
-        if(all){
-            descendant.addAll(temp);
-        }
-        else {
-            descendant = temp;
-        }
-        all = false;
+        descendant = temp;
         return temp;
     }
 
@@ -227,8 +238,26 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitRp_filter(XpathParser.Rp_filterContext ctx) {
         visit(ctx.rp());
-        result = descendant;
-        return visit(ctx.filter());
+        ArrayList <Node> cur = descendant;
+        ArrayList <Node> ret = new ArrayList<>();
+        System.out.println("Ready to test "+descendant);
+        ArrayList<Node> temp = new ArrayList<>();
+        for(Node res : cur){
+            ArrayList<Node> curr = new ArrayList<>();
+            System.out.println("now test filter on " + res);
+            curr.add(res);
+            descendant = curr;
+            ret = visit(ctx.filter());
+            if(ret.size()!=0){
+                System.out.println("test on " + res + " passed!");
+                temp.add(res);
+            }
+            else{
+                System.out.println("test on " + res + " failed!");
+            }
+        }
+        descendant = temp;
+        return temp;
     }
 
     //done
@@ -239,22 +268,17 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         temp = descendant;
         visit(ctx.rp(1));
         temp.addAll(descendant);
-        if(all){
-            descendant.addAll(temp);
-        }
-        else {
-            descendant = temp;
-        }
-        all = false;
+        descendant = temp;
         return temp;
     }
 
     //done
     @Override
     public ArrayList<Node> visitFilter_rp(XpathParser.Filter_rpContext ctx) {
+        ArrayList<Node> descendant2 = descendant;
         ArrayList<Node> temp = new ArrayList<>();
         ArrayList<Node> descendant1 = new ArrayList<>();
-        for(Node res : result){
+        for(Node res : descendant2){
             descendant1.add(res);
             descendant = descendant1;
             visit(ctx.rp());
@@ -265,7 +289,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         }
         //result = temp;
         descendant = temp;
-        return visitChildren(ctx);
+        return temp;
     }
 
     //what if rp(1) is 'text'?
@@ -276,12 +300,10 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         visit(ctx.rp(0));
         descendant1 = descendant;
         visit(ctx.rp(1));
-        for(Node res : result) {
-            for (Node des1 : descendant1) {
-                for (Node des : descendant) {
-                    if (des1.isEqualNode(des)) {
-                        temp.add(res);
-                    }
+        for (Node des1 : descendant1) {
+            for (Node des : descendant) {
+                if (des1.isEqualNode(des)) {
+                    temp.add(des1);
                 }
             }
         }
@@ -298,12 +320,10 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         visit(ctx.rp(0));
         descendant1 = descendant;
         visit(ctx.rp(1));
-        for(Node res : result) {
-            for (Node des1 : descendant1) {
-                for (Node des : descendant) {
-                    if (des1.isSameNode(des)) {
-                        temp.add(res);
-                    }
+        for (Node des1 : descendant1) {
+            for (Node des : descendant) {
+                if (des1.isSameNode(des)) {
+                    temp.add(des1);
                 }
             }
         }
@@ -318,19 +338,42 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         return visit(ctx.filter());
     }
 
+    @Override
+    public ArrayList<Node> visitFilter_txt(XpathParser.Filter_txtContext ctx) {
+        ArrayList<Node> temp = new ArrayList<>();
+        visit(ctx.rp());
+        String txt;
+        txt = ctx.STRING().getText();
+        String str = txt.substring(1,(txt.length()-1));
+        //System.out.println(str);
+        //System.out.println(descendant);
+
+        for(Node des : descendant){
+            //System.out.println("looking for " + str + "from " + des);
+            if(des.getNodeType() == Node.TEXT_NODE && des.getTextContent().equals(str)){
+                temp.add(des);
+            }
+            else if(des.getNodeType() == Node.ATTRIBUTE_NODE && des.getTextContent().equals(str)){
+                temp.add(des);
+            }
+        }
+        System.out.println("getting txt result is "+ temp);
+        //System.out.println("in filter_txt the result is " + temp);
+        descendant = temp;
+        return temp;
+    }
+
     //done
     @Override
     public ArrayList<Node> visitFilter_and(XpathParser.Filter_andContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
+        result = descendant;
         ArrayList<Node> left = visit(ctx.filter(0));
+        descendant = result;
         ArrayList<Node> right = visit(ctx.filter(1));
-        for(Node r : right){
-            for (Node l : left) {
-                if(r.isSameNode(l)){
-                    temp.add(r);
-                    break;
-                }
-            }
+        if(left.size()!=0 && right.size()!=0){
+            temp.addAll(right);
+            temp.addAll(left);
         }
         descendant = temp;
         return temp;
@@ -339,18 +382,14 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     //done
     @Override
     public ArrayList<Node> visitFilter_or(XpathParser.Filter_orContext ctx) {
+        ArrayList<Node> temp = new ArrayList<>();
+        result = descendant;
         ArrayList<Node> left = visit(ctx.filter(0));
+        descendant = result;
         ArrayList<Node> right = visit(ctx.filter(1));
-        ArrayList<Node> temp = new ArrayList<>(left);
-        int num = temp.size();
-        for(Node r : right){
-            temp.add(r);
-            for (int i=0; i<num; i++){
-                if(!r.isSameNode(temp.get(i))){
-                    temp.remove(r);
-                    break;
-                }
-            }
+        if(left.size()!=0 || right.size()!=0){
+            temp.addAll(right);
+            temp.addAll(left);
         }
         descendant = temp;
         return temp;
@@ -359,18 +398,14 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     //done
     @Override
     public ArrayList<Node> visitFilter_not(XpathParser.Filter_notContext ctx) {
-        ArrayList<Node> temp;
-        temp = descendant;
-        visit(ctx.filter());
-        for(Node t : temp){
-            for(Node des : descendant){
-                if(t.isEqualNode(des)){
-                    temp.remove(t);
-                    break;
-                }
-            }
+        ArrayList<Node> temp = new ArrayList<>();
+        ArrayList<Node> mid;
+        result = descendant;
+        mid = visit(ctx.filter());
+        if(mid.size() == 0){
+            descendant = result;
+            temp = result;
         }
-        descendant = temp;
         return temp;
     }
 }
