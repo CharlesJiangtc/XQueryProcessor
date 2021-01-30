@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 public class Xpath {
     public static void main(String[] args) {
         //read input
-        String test = "doc(\"j_caesar.xml\")/PERSONA";
+        String test = "doc(\"j_caesar.xml\")//text()";
         System.out.println(test);
         ANTLRInputStream antlrIS = new ANTLRInputStream(test);
         System.out.println("flag1");

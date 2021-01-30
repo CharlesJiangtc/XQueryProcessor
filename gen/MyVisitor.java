@@ -9,6 +9,11 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
     ArrayList<Node> currNodes = new ArrayList<Node>();
 
+    short elementNodeTypeCode = 1;
+    short attrNodeTypeCode = 2;
+    short textNodeTypeCode = 3;
+
+
 
     @Override public ArrayList<Node> visitAp_children(XpathParser.Ap_childrenContext ctx) {
         System.out.println("in visitAP_chidlren()");
@@ -24,7 +29,7 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
         visit(ctx.doc());
         currNodes.addAll(getAll(getAll(currNodes)));
 
-        printNodeList(currNodes);
+//        printNodeList(currNodes);
 
         return visit(ctx.rp());
     }
@@ -32,7 +37,6 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
 
     @Override public ArrayList<Node> visitDoc(XpathParser.DocContext ctx) {
         System.out.println("in visitDoc()");
-        System.out.println(ctx.filename().getText());
 
         File inputDoc = new File(System.getProperty("user.dir") + "/" + ctx.filename().getText());
         System.out.println(inputDoc.getName());
@@ -47,48 +51,133 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
             ArrayList<Node> curr = new ArrayList();
             curr.add(document);
             currNodes = curr;
-            printNodeList(currNodes);
+//            printNodeList(currNodes);
             return curr;
         }
         catch (Exception e) {
             System.out.println("catch exception during dealing with xml doc. /// " + e);
         }
-        currNodes = null;
-        return null;
+        currNodes = new ArrayList<Node>();
+        return currNodes;
     }
 
 
-    @Override public ArrayList<Node> visitFilename(XpathParser.FilenameContext ctx) { return visitChildren(ctx); }
+    //undone
+    @Override public ArrayList<Node> visitFilename(XpathParser.FilenameContext ctx) {
+        System.out.println("in visitFilename()");
+
+        return currNodes;
+    }
 
 
-    @Override public ArrayList<Node> visitRp_txt(XpathParser.Rp_txtContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_txt(XpathParser.Rp_txtContext ctx) {
+        System.out.println("in visitRp_txt()");
+
+        for (Node n : getChildren(currNodes)) {
+            System.out.println(n.getNodeType());
+            if (n.getNodeType() == textNodeTypeCode) {
+                currNodes.add(n);
+                System.out.println("text Node" + n.getNodeValue());
+            }
+        }
+
+        return currNodes;
+    }
 
 
-    @Override public ArrayList<Node> visitRp_attName(XpathParser.Rp_attNameContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_attName(XpathParser.Rp_attNameContext ctx) {
+        System.out.println("in visitRp_txt()");
+
+        for (Node n : getChildren(currNodes)) {
+            System.out.println(n.getNodeType());
+            if (n.getNodeType() == attrNodeTypeCode) {
+                currNodes.add(n);
+                System.out.println("attr Node" + n.getNodeValue());
+            }
+        }
+        return visitChildren(ctx);
+    }
 
 
-    @Override public ArrayList<Node> visitRp_parent(XpathParser.Rp_parentContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_parent(XpathParser.Rp_parentContext ctx) {
+        System.out.println("in visitRp_parent");
+
+        ArrayList<Node> res = new ArrayList<Node>();
+        for (Node n : currNodes) {
+            if (!res.contains(n.getParentNode())) {
+                res.add(n.getParentNode());
+            }
+        }
+
+        return visitChildren(ctx); }
 
 
-    @Override public ArrayList<Node> visitRp_sibling(XpathParser.Rp_siblingContext ctx) { return visitChildren(ctx); }
+    //shouldn't '.' just be self rather than sibling?
+    @Override public ArrayList<Node> visitRp_sibling(XpathParser.Rp_siblingContext ctx) {
+        System.out.println("in visitRp_sibling()");
+
+        return currNodes;
+    }
 
 
     @Override public ArrayList<Node> visitRp_descendant(XpathParser.Rp_descendantContext ctx) { return visitChildren(ctx); }
 
 
-    @Override public ArrayList<Node> visitRp_self(XpathParser.Rp_selfContext ctx) { return visitChildren(ctx); }
+    //shouldn't parentheses mean do whatever in the parentheses first?
+    @Override public ArrayList<Node> visitRp_self(XpathParser.Rp_selfContext ctx) {
+        System.out.println("in visitRp_self()");
+
+        visit(ctx.rp());
+        return currNodes;
+    }
 
 
-    @Override public ArrayList<Node> visitRp_children(XpathParser.Rp_childrenContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_children(XpathParser.Rp_childrenContext ctx) {
+        System.out.println("in visitRp_children()");
+
+        currNodes.addAll(getChildren(currNodes));
+        return currNodes;
+    }
 
 
-    @Override public ArrayList<Node> visitRp_tagName(XpathParser.Rp_tagNameContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_tagName(XpathParser.Rp_tagNameContext ctx) {
+        System.out.println("in visitRp_tagName()");
+
+        return visitChildren(ctx);
+    }
 
 
-    @Override public ArrayList<Node> visitRp_merge(XpathParser.Rp_mergeContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_merge(XpathParser.Rp_mergeContext ctx) {
+        System.out.println("in visitRp_tagMerge()");
+
+        ArrayList<Node> prevNodes = currNodes;
+        ArrayList<Node> res = new ArrayList<Node>();
+
+        ArrayList<Node> left = visit(ctx.rp(0));
+        currNodes = prevNodes;
+        ArrayList<Node> right = visit(ctx.rp(1));
+
+        res.addAll(left);
+
+        //remove duplicate
+        for (Node l : left) {
+            for (Node r : right) {
+                if (!l.isSameNode(r)) {
+                    res.add(r);
+                }
+            }
+        }
+
+        currNodes = res;
+        return currNodes;
+    }
 
 
-    @Override public ArrayList<Node> visitRp_filter(XpathParser.Rp_filterContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitRp_filter(XpathParser.Rp_filterContext ctx) {
+        System.out.println("in visitRp_filter()");
+
+        return visitChildren(ctx);
+    }
 
 
     @Override public ArrayList<Node> visitRp_all(XpathParser.Rp_allContext ctx) { return visitChildren(ctx); }
@@ -106,7 +195,36 @@ public class MyVisitor extends XpathBaseVisitor<ArrayList> {
     @Override public ArrayList<Node> visitFilter_is(XpathParser.Filter_isContext ctx) { return visitChildren(ctx); }
 
 
-    @Override public ArrayList<Node> visitFilter_equal(XpathParser.Filter_equalContext ctx) { return visitChildren(ctx); }
+    @Override public ArrayList<Node> visitFilter_equal(XpathParser.Filter_equalContext ctx) {
+        System.out.println("visitFilter_eq");
+
+        ArrayList<Node> prevNodes = currNodes;
+        ArrayList<Node> res = new ArrayList<Node>();
+
+        for (Node n : prevNodes) {
+            ArrayList<Node> tmp = new ArrayList<Node>();
+            tmp.add(n);
+            currNodes = tmp;
+            System.out.println("visiting left...");
+            ArrayList<Node> left = visit(ctx.rp(0));
+            currNodes = tmp;
+            System.out.println("visiting right...");
+            ArrayList<Node> right = visit(ctx.rp(1));
+            System.out.println("back to filter_eq");
+            System.out.println(left.size());
+            System.out.println(right.size());
+            for (Node l : left) {
+                for (Node r : right) {
+                    if (l.isEqualNode(r)) {
+                        res.add(n);
+                    }
+                }
+            }
+        }
+
+        currNodes = res;
+        return currNodes;
+    }
 
 
     @Override public ArrayList<Node> visitFilter_or(XpathParser.Filter_orContext ctx) { return visitChildren(ctx); }
