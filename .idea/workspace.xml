@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="XQueryProcessor:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fd9ad118-4077-4cfc-8bcc-bcaed2636c37" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gen/testInput" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/XQueryProcessor_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Xpath.g4" beforeDir="false" afterPath="$PROJECT_DIR$/Xpath.g4" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen/MyVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/MyVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/Xpath.interp" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Xpath.interp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen/Xpath.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/Xpath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathBaseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathBaseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathBaseVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathLexer.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathLexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/XpathVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/XpathVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/testInput" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/text1.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +22,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1njAEdVsQKyaV3IenNl7cl7Msdc" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -32,13 +38,14 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/gen" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -69,7 +76,7 @@
       <workItem from="1611893018273" duration="7000" />
       <workItem from="1611895997288" duration="8027000" />
       <workItem from="1611944125007" duration="44000" />
-      <workItem from="1611944187271" duration="48705000" />
+      <workItem from="1611944187271" duration="51005000" />
     </task>
     <servers />
   </component>
