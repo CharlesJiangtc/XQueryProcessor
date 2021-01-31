@@ -1,15 +1,26 @@
 grammar Xpath;
 
-WS   : [ \t\r\n]+ -> skip;
-ap
-    : doc '/' rp            #ap_children
-    | doc '//' rp           #ap_all
-    ;
+
+TAGNAME : [a-zA-Z_]+;
+
+ATTRIBNAME:  [a-zA-Z0-9_]+;
+
+STRING: ["][ a-zA-Z0-9]*["];
+
+TEXT : 'text()';
+
+WS   : [ \t\r\n]* -> skip;
 
 doc : 'doc' '(''"' filename '"'')';
 
 filename : FILE;
+
 FILE : [a-zA-Z0-9_] + '.xml';
+
+ap
+    : doc '/' rp            #ap_children
+    | doc '//' rp           #ap_all
+    ;
 
 rp
     : TAGNAME               #rp_tagName
@@ -25,8 +36,6 @@ rp
     | rp ',' rp             #rp_merge
     ;
 
-TEXT : 'text()';
-
 filter
     :   rp                  #filter_rp
     |   rp '=' rp           #filter_equal
@@ -39,11 +48,3 @@ filter
     |   filter 'or' filter  #filter_or
     |   'not' filter        #filter_not
     ;
-
-TAGNAME : [a-zA-Z_]+;
-
-ATTRIBNAME:  [a-zA-Z0-9_]+;
-
-STRING: ["][a-zA-Z0-9]*["];
-
-

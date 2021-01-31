@@ -18,30 +18,30 @@ public class XpathParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, WS=21, FILE=22, TEXT=23, TAGNAME=24, ATTRIBNAME=25, 
-		STRING=26;
+		T__17=18, T__18=19, T__19=20, TAGNAME=21, ATTRIBNAME=22, STRING=23, WS=24, 
+		FILE=25, TEXT=26;
 	public static final int
-		RULE_ap = 0, RULE_doc = 1, RULE_filename = 2, RULE_rp = 3, RULE_filter = 4;
+		RULE_doc = 0, RULE_filename = 1, RULE_ap = 2, RULE_rp = 3, RULE_filter = 4;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"ap", "doc", "filename", "rp", "filter"
+			"doc", "filename", "ap", "rp", "filter"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'/'", "'//'", "'doc'", "'('", "'\"'", "')'", "'*'", "'.'", "'..'", 
+			null, "'doc'", "'('", "'\"'", "')'", "'/'", "'//'", "'*'", "'.'", "'..'", 
 			"'@'", "'['", "']'", "','", "'='", "'eq'", "'=='", "'is'", "'and'", "'or'", 
-			"'not'", null, null, "'text()'"
+			"'not'", null, null, null, null, null, "'text()'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, null, "WS", "FILE", "TEXT", 
-			"TAGNAME", "ATTRIBNAME", "STRING"
+			null, null, null, null, null, null, null, null, null, "TAGNAME", "ATTRIBNAME", 
+			"STRING", "WS", "FILE", "TEXT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -93,6 +93,102 @@ public class XpathParser extends Parser {
 	public XpathParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+	}
+
+	public static class DocContext extends ParserRuleContext {
+		public FilenameContext filename() {
+			return getRuleContext(FilenameContext.class,0);
+		}
+		public DocContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_doc; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XpathListener ) ((XpathListener)listener).enterDoc(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XpathListener ) ((XpathListener)listener).exitDoc(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof XpathVisitor ) return ((XpathVisitor<? extends T>)visitor).visitDoc(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final DocContext doc() throws RecognitionException {
+		DocContext _localctx = new DocContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_doc);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(10);
+			match(T__0);
+			setState(11);
+			match(T__1);
+			setState(12);
+			match(T__2);
+			setState(13);
+			filename();
+			setState(14);
+			match(T__2);
+			setState(15);
+			match(T__3);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class FilenameContext extends ParserRuleContext {
+		public TerminalNode FILE() { return getToken(XpathParser.FILE, 0); }
+		public FilenameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_filename; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XpathListener ) ((XpathListener)listener).enterFilename(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XpathListener ) ((XpathListener)listener).exitFilename(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof XpathVisitor ) return ((XpathVisitor<? extends T>)visitor).visitFilename(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final FilenameContext filename() throws RecognitionException {
+		FilenameContext _localctx = new FilenameContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_filename);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(17);
+			match(FILE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class ApContext extends ParserRuleContext {
@@ -153,20 +249,20 @@ public class XpathParser extends Parser {
 
 	public final ApContext ap() throws RecognitionException {
 		ApContext _localctx = new ApContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_ap);
+		enterRule(_localctx, 4, RULE_ap);
 		try {
-			setState(18);
+			setState(27);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				_localctx = new Ap_childrenContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(10);
+				setState(19);
 				doc();
-				setState(11);
-				match(T__0);
-				setState(12);
+				setState(20);
+				match(T__4);
+				setState(21);
 				rp(0);
 				}
 				break;
@@ -174,110 +270,14 @@ public class XpathParser extends Parser {
 				_localctx = new Ap_allContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(14);
+				setState(23);
 				doc();
-				setState(15);
-				match(T__1);
-				setState(16);
+				setState(24);
+				match(T__5);
+				setState(25);
 				rp(0);
 				}
 				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class DocContext extends ParserRuleContext {
-		public FilenameContext filename() {
-			return getRuleContext(FilenameContext.class,0);
-		}
-		public DocContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_doc; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XpathListener ) ((XpathListener)listener).enterDoc(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XpathListener ) ((XpathListener)listener).exitDoc(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XpathVisitor ) return ((XpathVisitor<? extends T>)visitor).visitDoc(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final DocContext doc() throws RecognitionException {
-		DocContext _localctx = new DocContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_doc);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(20);
-			match(T__2);
-			setState(21);
-			match(T__3);
-			setState(22);
-			match(T__4);
-			setState(23);
-			filename();
-			setState(24);
-			match(T__4);
-			setState(25);
-			match(T__5);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class FilenameContext extends ParserRuleContext {
-		public TerminalNode FILE() { return getToken(XpathParser.FILE, 0); }
-		public FilenameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_filename; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XpathListener ) ((XpathListener)listener).enterFilename(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XpathListener ) ((XpathListener)listener).exitFilename(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XpathVisitor ) return ((XpathVisitor<? extends T>)visitor).visitFilename(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final FilenameContext filename() throws RecognitionException {
-		FilenameContext _localctx = new FilenameContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_filename);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(27);
-			match(FILE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -584,17 +584,17 @@ public class XpathParser extends Parser {
 				match(ATTRIBNAME);
 				}
 				break;
-			case T__3:
+			case T__1:
 				{
 				_localctx = new Rp_selfContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(37);
-				match(T__3);
+				match(T__1);
 				setState(38);
 				rp(0);
 				setState(39);
-				match(T__5);
+				match(T__3);
 				}
 				break;
 			default:
@@ -619,7 +619,7 @@ public class XpathParser extends Parser {
 						setState(43);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(44);
-						match(T__0);
+						match(T__4);
 						setState(45);
 						rp(5);
 						}
@@ -631,7 +631,7 @@ public class XpathParser extends Parser {
 						setState(46);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(47);
-						match(T__1);
+						match(T__5);
 						setState(48);
 						rp(4);
 						}
@@ -945,11 +945,11 @@ public class XpathParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(80);
-				match(T__3);
+				match(T__1);
 				setState(81);
 				filter(0);
 				setState(82);
-				match(T__5);
+				match(T__3);
 				}
 				break;
 			case 7:
@@ -1067,32 +1067,32 @@ public class XpathParser extends Parser {
 
 	public static final String _serializedATN =
 		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\34j\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\25\n\2"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\4\3\4"+
+		"\3\4\3\4\3\4\3\4\3\4\3\4\5\4\36\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
 		"\5\3\5\3\5\3\5\5\5,\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
 		"\5\3\5\3\5\7\5<\n\5\f\5\16\5?\13\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6"+
 		"\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3"+
 		"\6\3\6\5\6]\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6e\n\6\f\6\16\6h\13\6\3\6\2"+
-		"\4\b\n\7\2\4\6\b\n\2\2\2x\2\24\3\2\2\2\4\26\3\2\2\2\6\35\3\2\2\2\b+\3"+
-		"\2\2\2\n\\\3\2\2\2\f\r\5\4\3\2\r\16\7\3\2\2\16\17\5\b\5\2\17\25\3\2\2"+
-		"\2\20\21\5\4\3\2\21\22\7\4\2\2\22\23\5\b\5\2\23\25\3\2\2\2\24\f\3\2\2"+
-		"\2\24\20\3\2\2\2\25\3\3\2\2\2\26\27\7\5\2\2\27\30\7\6\2\2\30\31\7\7\2"+
-		"\2\31\32\5\6\4\2\32\33\7\7\2\2\33\34\7\b\2\2\34\5\3\2\2\2\35\36\7\30\2"+
-		"\2\36\7\3\2\2\2\37 \b\5\1\2 ,\7\32\2\2!,\7\t\2\2\",\7\n\2\2#,\7\13\2\2"+
-		"$,\7\31\2\2%&\7\f\2\2&,\7\33\2\2\'(\7\6\2\2()\5\b\5\2)*\7\b\2\2*,\3\2"+
-		"\2\2+\37\3\2\2\2+!\3\2\2\2+\"\3\2\2\2+#\3\2\2\2+$\3\2\2\2+%\3\2\2\2+\'"+
-		"\3\2\2\2,=\3\2\2\2-.\f\6\2\2./\7\3\2\2/<\5\b\5\7\60\61\f\5\2\2\61\62\7"+
-		"\4\2\2\62<\5\b\5\6\63\64\f\3\2\2\64\65\7\17\2\2\65<\5\b\5\4\66\67\f\4"+
-		"\2\2\678\7\r\2\289\5\n\6\29:\7\16\2\2:<\3\2\2\2;-\3\2\2\2;\60\3\2\2\2"+
-		";\63\3\2\2\2;\66\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>\t\3\2\2\2?=\3"+
-		"\2\2\2@A\b\6\1\2A]\5\b\5\2BC\5\b\5\2CD\7\20\2\2DE\5\b\5\2E]\3\2\2\2FG"+
-		"\5\b\5\2GH\7\21\2\2HI\5\b\5\2I]\3\2\2\2JK\5\b\5\2KL\7\22\2\2LM\5\b\5\2"+
-		"M]\3\2\2\2NO\5\b\5\2OP\7\23\2\2PQ\5\b\5\2Q]\3\2\2\2RS\7\6\2\2ST\5\n\6"+
-		"\2TU\7\b\2\2U]\3\2\2\2VW\5\b\5\2WX\7\20\2\2XY\7\34\2\2Y]\3\2\2\2Z[\7\26"+
-		"\2\2[]\5\n\6\3\\@\3\2\2\2\\B\3\2\2\2\\F\3\2\2\2\\J\3\2\2\2\\N\3\2\2\2"+
-		"\\R\3\2\2\2\\V\3\2\2\2\\Z\3\2\2\2]f\3\2\2\2^_\f\5\2\2_`\7\24\2\2`e\5\n"+
-		"\6\6ab\f\4\2\2bc\7\25\2\2ce\5\n\6\5d^\3\2\2\2da\3\2\2\2eh\3\2\2\2fd\3"+
-		"\2\2\2fg\3\2\2\2g\13\3\2\2\2hf\3\2\2\2\t\24+;=\\df";
+		"\4\b\n\7\2\4\6\b\n\2\2\2x\2\f\3\2\2\2\4\23\3\2\2\2\6\35\3\2\2\2\b+\3\2"+
+		"\2\2\n\\\3\2\2\2\f\r\7\3\2\2\r\16\7\4\2\2\16\17\7\5\2\2\17\20\5\4\3\2"+
+		"\20\21\7\5\2\2\21\22\7\6\2\2\22\3\3\2\2\2\23\24\7\33\2\2\24\5\3\2\2\2"+
+		"\25\26\5\2\2\2\26\27\7\7\2\2\27\30\5\b\5\2\30\36\3\2\2\2\31\32\5\2\2\2"+
+		"\32\33\7\b\2\2\33\34\5\b\5\2\34\36\3\2\2\2\35\25\3\2\2\2\35\31\3\2\2\2"+
+		"\36\7\3\2\2\2\37 \b\5\1\2 ,\7\27\2\2!,\7\t\2\2\",\7\n\2\2#,\7\13\2\2$"+
+		",\7\34\2\2%&\7\f\2\2&,\7\30\2\2\'(\7\4\2\2()\5\b\5\2)*\7\6\2\2*,\3\2\2"+
+		"\2+\37\3\2\2\2+!\3\2\2\2+\"\3\2\2\2+#\3\2\2\2+$\3\2\2\2+%\3\2\2\2+\'\3"+
+		"\2\2\2,=\3\2\2\2-.\f\6\2\2./\7\7\2\2/<\5\b\5\7\60\61\f\5\2\2\61\62\7\b"+
+		"\2\2\62<\5\b\5\6\63\64\f\3\2\2\64\65\7\17\2\2\65<\5\b\5\4\66\67\f\4\2"+
+		"\2\678\7\r\2\289\5\n\6\29:\7\16\2\2:<\3\2\2\2;-\3\2\2\2;\60\3\2\2\2;\63"+
+		"\3\2\2\2;\66\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>\t\3\2\2\2?=\3\2\2"+
+		"\2@A\b\6\1\2A]\5\b\5\2BC\5\b\5\2CD\7\20\2\2DE\5\b\5\2E]\3\2\2\2FG\5\b"+
+		"\5\2GH\7\21\2\2HI\5\b\5\2I]\3\2\2\2JK\5\b\5\2KL\7\22\2\2LM\5\b\5\2M]\3"+
+		"\2\2\2NO\5\b\5\2OP\7\23\2\2PQ\5\b\5\2Q]\3\2\2\2RS\7\4\2\2ST\5\n\6\2TU"+
+		"\7\6\2\2U]\3\2\2\2VW\5\b\5\2WX\7\20\2\2XY\7\31\2\2Y]\3\2\2\2Z[\7\26\2"+
+		"\2[]\5\n\6\3\\@\3\2\2\2\\B\3\2\2\2\\F\3\2\2\2\\J\3\2\2\2\\N\3\2\2\2\\"+
+		"R\3\2\2\2\\V\3\2\2\2\\Z\3\2\2\2]f\3\2\2\2^_\f\5\2\2_`\7\24\2\2`e\5\n\6"+
+		"\6ab\f\4\2\2bc\7\25\2\2ce\5\n\6\5d^\3\2\2\2da\3\2\2\2eh\3\2\2\2fd\3\2"+
+		"\2\2fg\3\2\2\2g\13\3\2\2\2hf\3\2\2\2\t\35+;=\\df";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

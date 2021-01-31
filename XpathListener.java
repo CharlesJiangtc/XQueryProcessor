@@ -7,6 +7,26 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface XpathListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link XpathParser#doc}.
+	 * @param ctx the parse tree
+	 */
+	void enterDoc(XpathParser.DocContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XpathParser#doc}.
+	 * @param ctx the parse tree
+	 */
+	void exitDoc(XpathParser.DocContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XpathParser#filename}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilename(XpathParser.FilenameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XpathParser#filename}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilename(XpathParser.FilenameContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ap_children}
 	 * labeled alternative in {@link XpathParser#ap}.
 	 * @param ctx the parse tree
@@ -30,26 +50,6 @@ public interface XpathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAp_all(XpathParser.Ap_allContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XpathParser#doc}.
-	 * @param ctx the parse tree
-	 */
-	void enterDoc(XpathParser.DocContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XpathParser#doc}.
-	 * @param ctx the parse tree
-	 */
-	void exitDoc(XpathParser.DocContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XpathParser#filename}.
-	 * @param ctx the parse tree
-	 */
-	void enterFilename(XpathParser.FilenameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XpathParser#filename}.
-	 * @param ctx the parse tree
-	 */
-	void exitFilename(XpathParser.FilenameContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code rp_txt}
 	 * labeled alternative in {@link XpathParser#rp}.

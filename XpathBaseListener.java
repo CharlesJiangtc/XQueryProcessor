@@ -15,30 +15,6 @@ public class XpathBaseListener implements XpathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAp_children(XpathParser.Ap_childrenContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAp_children(XpathParser.Ap_childrenContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAp_all(XpathParser.Ap_allContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAp_all(XpathParser.Ap_allContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDoc(XpathParser.DocContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -58,6 +34,30 @@ public class XpathBaseListener implements XpathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFilename(XpathParser.FilenameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAp_children(XpathParser.Ap_childrenContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAp_children(XpathParser.Ap_childrenContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAp_all(XpathParser.Ap_allContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAp_all(XpathParser.Ap_allContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -28,11 +28,11 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     ArrayList<Node> allnode = new ArrayList<>();
     boolean all = false;
     Document doc = null;
+    boolean rm = false;
 
     public ArrayList<Node> removeDup(ArrayList<Node> temp){
         for(Node t : temp){
             for(int i=(temp.indexOf(t)+1); i<temp.size(); i++){
-                //System.out.println(t.isSameNode(temp.get(i)));
                 if(t.isSameNode(temp.get(i))){
                     temp.remove(t);
                     break;
@@ -74,13 +74,15 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitAp_children(XpathParser.Ap_childrenContext ctx) {
         visit(ctx.doc());
-        ArrayList<Node> temp = new ArrayList<>();
+        /*ArrayList<Node> temp = new ArrayList<>();
         int num = descendant.get(0).getChildNodes().getLength();
         for (int i = 0; i < num; i++) {
-            temp.add(descendant.get(0).getChildNodes().item(i));
+            if(descendant.get(0).getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
+                temp.add(descendant.get(0).getChildNodes().item(i));
+            }
         }
         temp = removeDup(temp);
-        descendant = temp;
+        descendant=temp;*/
         all = false;
         return visit(ctx.rp());
     }
@@ -96,8 +98,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
                 temp.add(descendant.get(0).getChildNodes().item(i));
             }
         }
-        temp = removeDup(temp);
-        descendant = temp;
+        descendant.addAll(temp);
         all = true;
         return visit(ctx.rp());
     }
@@ -109,20 +110,35 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         if(all){
             temp.addAll(descendant);
             temp = getAllnode(temp);
-            allnode = temp;
             temp.removeIf(t -> !t.getNodeName().equals(ctx.TAGNAME().getText()));
+            if(rm){
+                removeDup(temp);
+                rm = false;
+            }
             descendant = temp;
             all = false;
         }
         else {
             for (Node des : descendant) {
+                if(des.getNodeType() == Node.DOCUMENT_NODE){
+                    int num = descendant.get(0).getChildNodes().getLength();
+                    for (int i = 0; i < num; i++) {
+                        if(descendant.get(0).getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
+                            temp.add(descendant.get(0).getChildNodes().item(i));
+                        }
+                    }
+                    continue;
+                }
                 int num = des.getChildNodes().getLength();
                 for (int i = 0; i < num; i++) {
                     if (des.getChildNodes().item(i).getNodeName().equals(ctx.TAGNAME().getText())) {
                         temp.add(des.getChildNodes().item(i));
-                        //System.out.println(des + ctx.TAGNAME().getText());
                     }
                 }
+            }
+            if(rm){
+                removeDup(temp);
+                rm = false;
             }
             descendant = temp;
         }
@@ -132,9 +148,18 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     public ArrayList<Node> getAllnode (ArrayList<Node> parent){
         ArrayList<Node> temp = new ArrayList<>();
         for (Node t : parent) {
+            if(t.isSameNode(doc)){
+                int num = descendant.get(0).getChildNodes().getLength();
+                for (int i = 0; i < num; i++) {
+                    if(descendant.get(0).getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        temp.add(descendant.get(0).getChildNodes().item(i));
+                    }
+                }
+                continue;
+            }
             int num = t.getChildNodes().getLength();
             if(num == 0){
-                break;
+                continue;
             }
             for (int i = 0; i < num; i++){
                 ArrayList<Node> children = new ArrayList<>();
@@ -145,7 +170,6 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
                 temp.addAll(children);
             }
         }
-        temp = removeDup(temp);
         return temp;
     }
 
@@ -153,19 +177,42 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitRp_descendant(XpathParser.Rp_descendantContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
-        for(Node des : descendant){
-            int num = des.getChildNodes().getLength();
-            for (int i = 0; i < num; i++) {
-                temp.add(des.getChildNodes().item(i));
+        if(all){
+            temp.addAll(descendant);
+            temp = getAllnode(temp);
+            temp.removeIf(t -> !(t.getNodeType() == Node.ELEMENT_NODE));
+            descendant = temp;
+            if(rm){
+                removeDup(temp);
+                rm = false;
             }
+            all = false;
         }
-        descendant = temp;
+        else {
+            for (Node des : descendant) {
+                int num = des.getChildNodes().getLength();
+                for (int i = 0; i < num; i++) {
+                    if (des.getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        temp.add(des.getChildNodes().item(i));
+                    }
+                }
+            }
+            if(rm){
+                removeDup(temp);
+                rm = false;
+            }
+            descendant = temp;
+        }
         return temp;
     }
 
     //done
     @Override
     public ArrayList<Node> visitRp_sibling(XpathParser.Rp_siblingContext ctx) {
+        if(rm){
+            removeDup(descendant);
+            rm = false;
+        }
         return descendant;
     }
 
@@ -176,6 +223,10 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         for(Node des : descendant) {
             temp.add(des.getParentNode());
         }
+        if(rm){
+            removeDup(temp);
+            rm = false;
+        }
         descendant = temp;
         return temp;
     }
@@ -185,13 +236,16 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     public ArrayList<Node> visitRp_txt(XpathParser.Rp_txtContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
         for (Node des : descendant) {
-            System.out.println("getting text from " + des);
             int num = des.getChildNodes().getLength();
             for(int i=0; i<num; i++) {
                 if (des.getChildNodes().item(i).getNodeType() == Node.TEXT_NODE && !des.getChildNodes().item(i).getTextContent().equals("\n")) {
                     temp.add(des.getChildNodes().item(i));
                 }
             }
+        }
+        if(rm){
+            removeDup(temp);
+            rm = false;
         }
         descendant = temp;
         return temp;
@@ -209,6 +263,10 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
                 }
             }
         }
+        if(rm){
+            removeDup(temp);
+            rm = false;
+        }
         descendant = temp;
         return temp;
     }
@@ -216,6 +274,10 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     //done
     @Override
     public ArrayList<Node> visitRp_self(XpathParser.Rp_selfContext ctx) {
+        if(rm){
+            removeDup(descendant);
+            rm = false;
+        }
         return visit(ctx.rp());
     }
 
@@ -223,6 +285,11 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitRp_children(XpathParser.Rp_childrenContext ctx) {
         visit(ctx.rp(0));
+        if(rm){
+            removeDup(descendant);
+            rm = false;
+        }
+        rm = true;
         return visit(ctx.rp(1));
     }
 
@@ -230,6 +297,11 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitRp_all(XpathParser.Rp_allContext ctx) {
         visit(ctx.rp(0));
+        if(rm){
+            removeDup(descendant);
+            rm = false;
+        }
+        rm = true;
         all = true;
         return visit(ctx.rp(1));
     }
@@ -240,21 +312,21 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         visit(ctx.rp());
         ArrayList <Node> cur = descendant;
         ArrayList <Node> ret = new ArrayList<>();
-        System.out.println("Ready to test "+descendant);
         ArrayList<Node> temp = new ArrayList<>();
         for(Node res : cur){
             ArrayList<Node> curr = new ArrayList<>();
-            System.out.println("now test filter on " + res);
             curr.add(res);
             descendant = curr;
             ret = visit(ctx.filter());
             if(ret.size()!=0){
-                System.out.println("test on " + res + " passed!");
                 temp.add(res);
             }
             else{
-                System.out.println("test on " + res + " failed!");
             }
+        }
+        if(rm){
+            removeDup(temp);
+            rm = false;
         }
         descendant = temp;
         return temp;
@@ -264,10 +336,16 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitRp_merge(XpathParser.Rp_mergeContext ctx) {
         ArrayList<Node> temp;
-        visit(ctx.rp(0));
+        result = descendant;
+        ArrayList<Node> left = visit(ctx.rp(0));
         temp = descendant;
-        visit(ctx.rp(1));
+        descendant = result;
+        ArrayList<Node> right = visit(ctx.rp(1));
         temp.addAll(descendant);
+        if(rm){
+            removeDup(temp);
+            rm = false;
+        }
         descendant = temp;
         return temp;
     }
@@ -296,12 +374,12 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitFilter_equal(XpathParser.Filter_equalContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
-        ArrayList<Node> descendant1;
-        visit(ctx.rp(0));
-        descendant1 = descendant;
-        visit(ctx.rp(1));
-        for (Node des1 : descendant1) {
-            for (Node des : descendant) {
+        result = descendant;
+        ArrayList<Node> left = visit(ctx.rp(0));
+        descendant = result;
+        ArrayList<Node> right = visit(ctx.rp(1));
+        for (Node des1 : left) {
+            for (Node des : right) {
                 if (des1.isEqualNode(des)) {
                     temp.add(des1);
                 }
@@ -316,12 +394,12 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
     @Override
     public ArrayList<Node> visitFilter_is(XpathParser.Filter_isContext ctx) {
         ArrayList<Node> temp = new ArrayList<>();
-        ArrayList<Node> descendant1;
-        visit(ctx.rp(0));
-        descendant1 = descendant;
-        visit(ctx.rp(1));
-        for (Node des1 : descendant1) {
-            for (Node des : descendant) {
+        result = descendant;
+        ArrayList<Node> left = visit(ctx.rp(0));
+        descendant = result;
+        ArrayList<Node> right = visit(ctx.rp(1));
+        for (Node des1 : left) {
+            for (Node des : right) {
                 if (des1.isSameNode(des)) {
                     temp.add(des1);
                 }
@@ -345,11 +423,8 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         String txt;
         txt = ctx.STRING().getText();
         String str = txt.substring(1,(txt.length()-1));
-        //System.out.println(str);
-        //System.out.println(descendant);
 
         for(Node des : descendant){
-            //System.out.println("looking for " + str + "from " + des);
             if(des.getNodeType() == Node.TEXT_NODE && des.getTextContent().equals(str)){
                 temp.add(des);
             }
@@ -357,8 +432,6 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
                 temp.add(des);
             }
         }
-        System.out.println("getting txt result is "+ temp);
-        //System.out.println("in filter_txt the result is " + temp);
         descendant = temp;
         return temp;
     }
