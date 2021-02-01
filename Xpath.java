@@ -24,7 +24,9 @@ public class Xpath {
         }
         try {
             File inputFile = new File(args[0]);
+
             Scanner scanner = new Scanner(inputFile);
+
             System.out.println("=======starting queries=======");
 
             while (scanner.hasNextLine()) {
@@ -42,7 +44,6 @@ public class Xpath {
                     //visit
                     Visitor visitor = new Visitor();
                     ArrayList<Node> result = visitor.visit(pTree);
-
                     if (result != null) {
                         System.out.println("query done. showing result for query : " + query + ". result size : " + result.size());
                         System.out.println("---------------------");
@@ -77,30 +78,3 @@ public class Xpath {
         return sw.toString();
     }
 }
-        //String test = "doc(\"j_caesar.xml\")/PLAY";                   //test ap_children                              passed  return 1
-        //String test = "doc(\"j_caesar.xml\")/PLAY/PERSONAE/PGROUP";   //test ap_children  rp_children                 passed  return 6
-        //String test = "doc(\"j_caesar.xml\")/PLAY/FM/*";              //test ap_children  rp_descendant               passed  return 4
-        //String test = "doc(\"j_caesar.xml\")/PLAY//ACT";              //test ap_children  rp_all                      passed  return 5
-        //String test = "doc(\"j_caesar.xml\")/PLAY//*";                //test ap_children  rp_all  rp_descendant       passed  return 4454
-        //String test = "doc(\"j_caesar.xml\")//PERSONA";               //test ap_all                                   passed  return 36
-        //String test = "doc(\"j_caesar.xml\")/PLAY/.";                 //test rp_sibling                               passed  return 1
-        //String test = "doc(\"j_caesar.xml\")/PLAY/TITLE/..";          //test rp_parent                                passed  return 1
-        //String test = "doc(\"j_caesar.xml\")//ACT[not .SPEAKER/text() = \"CAESAR\"]/. ";          //test rp_sibling  filter_not  rp_all  rp_sibling   passed  return 5
-        //String test = "doc(\"j_caesar.xml\")//ACT[not .//SPEAKER/text() = \"CAESAR\"] ";          //test rp_sibling  filter_not  rp_all  rp_parent    passed  return 2
-        //String test = "doc(\"j_caesar.xml\")//PLAYSUBT/text() = \"JULIUS CAESAR\"";               //test rp_filter  rp_txt                            passed  return 1
-        //String test = "doc(\"j_caesar.xml\")//PLAYSUBT[./text() = \"JULIUS CAESAR\"] ";           //test rp_filter  rp_txt                            passed  return 1
-        //String test = "doc(\"j_caesar.xml\")//SCENE[SPEECH/SPEAKER/text() = \"CAESAR\"] ";        //test filter_txt                                   passed  return 3
-        //String test = "doc(\"j_caesar.xml\")//SPEECH[.//SPEAKER/text() = \"Second Commoner\"] ";  //test filter_txt  rp_all rp_sibling                passed  return 6
-        //String test = "doc(\"j_caesar.xml\")//SCENE[./* is (./STAGEDIR[./text() = \"Exeunt\")] "; //test filter_is  filter_txt                        passed  return 14
-        //String test = "doc(\"j_caesar.xml\")//(PLAYSUBT[./text() = \"JULIUS CAESAR\"] , ACT[not .//SPEAKER/text() = \"CAESAR\"] ";        //test filet_txt  rp_merge          passed  return 3
-        //String test = "doc(\"j_caesar.xml\")//SPEECH[./SPEAKER/text() eq ./../../..//PERSONA[./text() = \"MESSALA\"]/text() ";            //test rp_parent  filter_equal      passed  return 21
-        //String test = "doc(\"j_caesar.xml\")//ACT[SCENE [SPEECH/SPEAKER/text() = \"CAESAR\"] [SPEECH/SPEAKER/text() = \"BRUTUS\"]] ";     //test rp_filter  filter_txt        passed  return 3
-        //String test = "doc(\"j_caesar.xml\")//ACT[SCENE [SPEECH/SPEAKER/text() = \"CAESAR\" and SPEECH/SPEAKER/text() = \"BRUTUS\"]] ";   //test filter_and  filter_or        passed  return 3
-
-        /*ANTLRInputStream antlrIS = new ANTLRInputStream(test);
-        XpathLexer xpLexer = new XpathLexer(antlrIS);
-        CommonTokenStream commonTS = new CommonTokenStream(xpLexer);
-        XpathParser xpParser = new XpathParser(commonTS);
-        ParseTree pTree = xpParser.ap();
-        Visitor visitor = new Visitor();
-        ArrayList<Node> result = visitor.visit(pTree);*/
