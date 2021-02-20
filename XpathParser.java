@@ -1,4 +1,4 @@
-// Generated from E:/IntelliJ IDEA 2020.3.1/projects/milestone1/.idea\Xpath.g4 by ANTLR 4.9.1
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/ms1/XQP\Xpath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -18,8 +18,8 @@ public class XpathParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, TAGNAME=21, ATTRIBNAME=22, STRING=23, WS=24, 
-		FILE=25, TEXT=26;
+		T__17=18, T__18=19, T__19=20, TAGNAME=21, ATTRIBNAME=22, STRING=23, TEXT=24, 
+		WS=25, FILE=26;
 	public static final int
 		RULE_doc = 0, RULE_filename = 1, RULE_ap = 2, RULE_rp = 3, RULE_filter = 4;
 	private static String[] makeRuleNames() {
@@ -33,7 +33,7 @@ public class XpathParser extends Parser {
 		return new String[] {
 			null, "'doc'", "'('", "'\"'", "')'", "'/'", "'//'", "'*'", "'.'", "'..'", 
 			"'@'", "'['", "']'", "','", "'='", "'eq'", "'=='", "'is'", "'and'", "'or'", 
-			"'not'", null, null, null, null, null, "'text()'"
+			"'not'", null, null, null, "'text()'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -41,7 +41,7 @@ public class XpathParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, "TAGNAME", "ATTRIBNAME", 
-			"STRING", "WS", "FILE", "TEXT"
+			"STRING", "TEXT", "WS", "FILE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -1075,11 +1075,11 @@ public class XpathParser extends Parser {
 		"\6\3\6\5\6]\n\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6e\n\6\f\6\16\6h\13\6\3\6\2"+
 		"\4\b\n\7\2\4\6\b\n\2\2\2x\2\f\3\2\2\2\4\23\3\2\2\2\6\35\3\2\2\2\b+\3\2"+
 		"\2\2\n\\\3\2\2\2\f\r\7\3\2\2\r\16\7\4\2\2\16\17\7\5\2\2\17\20\5\4\3\2"+
-		"\20\21\7\5\2\2\21\22\7\6\2\2\22\3\3\2\2\2\23\24\7\33\2\2\24\5\3\2\2\2"+
+		"\20\21\7\5\2\2\21\22\7\6\2\2\22\3\3\2\2\2\23\24\7\34\2\2\24\5\3\2\2\2"+
 		"\25\26\5\2\2\2\26\27\7\7\2\2\27\30\5\b\5\2\30\36\3\2\2\2\31\32\5\2\2\2"+
 		"\32\33\7\b\2\2\33\34\5\b\5\2\34\36\3\2\2\2\35\25\3\2\2\2\35\31\3\2\2\2"+
 		"\36\7\3\2\2\2\37 \b\5\1\2 ,\7\27\2\2!,\7\t\2\2\",\7\n\2\2#,\7\13\2\2$"+
-		",\7\34\2\2%&\7\f\2\2&,\7\30\2\2\'(\7\4\2\2()\5\b\5\2)*\7\6\2\2*,\3\2\2"+
+		",\7\32\2\2%&\7\f\2\2&,\7\30\2\2\'(\7\4\2\2()\5\b\5\2)*\7\6\2\2*,\3\2\2"+
 		"\2+\37\3\2\2\2+!\3\2\2\2+\"\3\2\2\2+#\3\2\2\2+$\3\2\2\2+%\3\2\2\2+\'\3"+
 		"\2\2\2,=\3\2\2\2-.\f\6\2\2./\7\7\2\2/<\5\b\5\7\60\61\f\5\2\2\61\62\7\b"+
 		"\2\2\62<\5\b\5\6\63\64\f\3\2\2\64\65\7\17\2\2\65<\5\b\5\4\66\67\f\4\2"+

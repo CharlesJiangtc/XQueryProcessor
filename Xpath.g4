@@ -9,7 +9,7 @@ STRING: ["][ a-zA-Z0-9]*["];
 
 TEXT : 'text()';
 
-WS   : [ \t\r\n]* -> skip;
+WS  : [ \t\r\n]+ -> skip;
 
 doc : 'doc' '(''"' filename '"'')';
 

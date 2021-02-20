@@ -38,6 +38,7 @@ public class Xpath {
                 String query = scanner.nextLine();
                 System.out.println("querying : " + query);
                 try {
+
                     ANTLRInputStream antlrIS = new ANTLRInputStream(query);
 
                     //parser
@@ -45,19 +46,20 @@ public class Xpath {
                     CommonTokenStream commonTS = new CommonTokenStream(xpLexer);
                     XpathParser xpParser = new XpathParser(commonTS);
                     ParseTree pTree = xpParser.ap();
-
+                    System.out.println("test");
                     //visit
                     Visitor visitor = new Visitor();
                     ArrayList<Node> result = visitor.visit(pTree);
                     if (result != null) {
                         System.out.println("query done. showing result for query : " + query + ". result size : " + result.size());
                         System.out.println("---------------------");
-                        // for (Node n : result) {
-                        //     if (n.getNodeType() == 2) {
-                        //         System.out.println(n.getNodeValue());
-                        //     }
-                        //     System.out.println(nodeToString(n));
-                        // }
+                         /*for (Node n : result) {
+                             if (n.getNodeType() == 2) {
+                                 System.out.println(n.getNodeValue());
+                             }
+                             System.out.println(nodeToString(n));
+                         }
+                        System.out.println(result.size());*/
                         nodesToXML(result, args[0]);
                     }
                 } catch (Exception e) {
