@@ -69,7 +69,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         ArrayList<Node> a = new ArrayList<>();
         descendant.add(doc);
         a.add(doc);
-        System.out.println("read doc finish");
+        // System.out.println("read doc finish");
         return a;
     }
 
@@ -103,7 +103,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         }
         descendant.addAll(temp);
         all = true;
-        System.out.println("ap all finish");
+        // System.out.println("ap all finish");
         return visit(ctx.rp());
     }
 
@@ -217,7 +217,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             removeDup(descendant);
             rm = false;
         }
-        System.out.println("rp sibling finish");
+        // System.out.println("rp sibling finish");
         return descendant;
     }
 
@@ -253,7 +253,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             rm = false;
         }
         descendant = temp;
-        System.out.println("rp txt finish");
+        // System.out.println("rp txt finish");
         return temp;
     }
 
@@ -284,7 +284,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             removeDup(descendant);
             rm = false;
         }
-        System.out.println("rp self finish");
+        // System.out.println("rp self finish");
         return visit(ctx.rp());
     }
 
@@ -297,7 +297,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             rm = false;
         }
         rm = true;
-        System.out.println("rp children finish");
+        // System.out.println("rp children finish");
         return visit(ctx.rp(1));
     }
 
@@ -311,7 +311,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
         }
         rm = true;
         all = true;
-        System.out.println("rp all finish");
+        // System.out.println("rp all finish");
         return visit(ctx.rp(1));
     }
 
@@ -338,7 +338,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             rm = false;
         }
         descendant = temp;
-        System.out.println("rp filter finish");
+        // System.out.println("rp filter finish");
         return temp;
     }
 
@@ -357,7 +357,7 @@ public class Visitor extends XpathBaseVisitor<ArrayList<Node>> {
             rm = false;
         }
         descendant = temp;
-        System.out.println("rp merge finish");
+        // System.out.println("rp merge finish");
         return temp;
     }
 

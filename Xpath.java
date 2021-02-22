@@ -59,7 +59,7 @@ public class Xpath {
                             }
                             System.out.println(nodeToString(n));
                         }
-                        System.out.println(result.size());
+                        System.out.println("-----start generating result file-----");
                         nodesToXML(result, args[0]);
                     }
                 } catch (Exception e) {
