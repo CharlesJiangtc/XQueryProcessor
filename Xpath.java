@@ -53,13 +53,13 @@ public class Xpath {
                     if (result != null) {
                         System.out.println("query done. showing result for query : " + query + ". result size : " + result.size());
                         System.out.println("---------------------");
-                         /*for (Node n : result) {
-                             if (n.getNodeType() == 2) {
-                                 System.out.println(n.getNodeValue());
-                             }
-                             System.out.println(nodeToString(n));
-                         }
-                        System.out.println(result.size());*/
+                        for (Node n : result) {
+                            if (n.getNodeType() == 2) {
+                                System.out.println(n.getNodeValue());
+                            }
+                            System.out.println(nodeToString(n));
+                        }
+                        System.out.println(result.size());
                         nodesToXML(result, args[0]);
                     }
                 } catch (Exception e) {
@@ -107,7 +107,7 @@ public class Xpath {
             
             DOMSource source = new DOMSource(doc);
 
-            String outputFileName = "Result_"+ inputFileName + ".xml";
+            String outputFileName = "result.xml";
 
             File myFile = new File(outputFileName);
             
@@ -119,7 +119,7 @@ public class Xpath {
             System.out.println("result file generated. file name : " + outputFileName);
         }
         catch (Exception e) {
-            System.out.println("generating xml file failed.");
+            System.out.println("generating xml file failed." + e);
         }
     }
 }
