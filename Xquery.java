@@ -20,55 +20,51 @@ import org.w3c.dom.Node;
 
 public class Xquery {
     public static void main(String[] args) {
-        /*if (args.length == 0) {
+        if (args.length == 0) {
             System.out.println("=======Input queries file missing!=======");
             return;
-        }*/
-        //try {
-            //File inputFile = new File(args[0]);
+        }
+        try {
+        File inputFile = new File(args[0]);
 
-            //Scanner scanner = new Scanner(inputFile);
+        Scanner scanner = new Scanner(inputFile);
 
-            System.out.println("=======starting queries=======");
+        System.out.println("=======starting queries=======");
 
-            //while (scanner.hasNextLine()) {
-                //String query = scanner.nextLine();
-                String query = "doc(\"j_caesar.xml\")//ACT";
-                System.out.println("querying : " + query);
+            while (scanner.hasNextLine()) {
+                String query = scanner.nextLine();
+                System.out.println("querying : ");
                 try {
 
                     ANTLRInputStream antlrIS = new ANTLRInputStream(query);
-
-                    //parser
                     XqueryLexer xqLexer = new XqueryLexer(antlrIS);
                     CommonTokenStream commonTS = new CommonTokenStream(xqLexer);
                     XqueryParser xqParser = new XqueryParser(commonTS);
                     ParseTree pTree = xqParser.xq();
-                    //visit
                     XqVisitor visitor = new XqVisitor();
                     ArrayList<Node> result = visitor.visit(pTree);
 
 
                     if (result != null) {
-                        System.out.println("query done. showing result for query : " + query + ". result size : " + result.size());
+                        System.out.println("query done. showing result for query. result size : " + result.size());
                         System.out.println("---------------------");
-                         /*for (Node n : result) {
-                             if (n.getNodeType() == 2) {
-                                 System.out.println(n.getNodeValue());
-                             }
-                             System.out.println(nodeToString(n));
-                         }*/
-                        System.out.println("ss" + result.size());
-                        //nodesToXML(result, args[0]);
+                            for (Node n : result) {
+                                if (n.getNodeType() == 2) {
+                                    System.out.println(n.getNodeValue());
+                                }
+                                System.out.println(nodeToString(n));
+                            }
+                            nodesToXML(result);
+                        System.out.println("query done. showing result for query. result size : " + result.size());
                     }
                 } catch (Exception e) {
-                    System.out.println("error occurs in the query : " + query + e);
+                    System.out.println("error occurs in the query : " + query);
                 }
                 System.out.println("---------------------");
-            //}
-        //} catch (FileNotFoundException e) {
-        //    System.out.println("File " + args[0] + " not found.");
-        //}
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File " + args[0] + " not found.");
+        }
         System.out.println("=======end of queries=======");
     }
 
@@ -85,16 +81,16 @@ public class Xquery {
         return sw.toString();
     }
 
-    private static void nodesToXML(ArrayList<Node> nodes, String inputFileName) {
+    private static void nodesToXML(ArrayList<Node> nodes) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.newDocument();
-            Element root = doc.createElement("Result");
-            doc.appendChild(root);
+            /*Element root = doc.createElement("Result");
+            doc.appendChild(root);*/
 
             for (Node n : nodes) {
-                root.appendChild(doc.importNode(n,true));
+                doc.appendChild(doc.importNode(n,true));
             }
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -106,7 +102,7 @@ public class Xquery {
 
             DOMSource source = new DOMSource(doc);
 
-            String outputFileName = "Result_"+ inputFileName + ".xml";
+            String outputFileName = "Result.xml";
 
             File myFile = new File(outputFileName);
 

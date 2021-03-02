@@ -9,11 +9,9 @@ whereClause : 'where' cond;
 
 returnClause : 'return' xq;
 
-VARNAME: [a-zA-Z0-9_-]+;
-
 var : '$' VARNAME;
 
-Stringconstant : ["][a-zA-Z0-9,.?;! '"-]*["];
+Stringconstant : '"'+[a-zA-Z0-9,.?;! -]+'"';
 
 xq
     :   var                                                         #xq_variable
@@ -33,7 +31,7 @@ cond
     |   xq 'eq' xq                                                  #cond_equal
     |   xq '==' xq                                                  #cond_is
     |   xq 'is' xq                                                  #cond_is
-    |   'empty(' xq ')'                                             #cond_empty
+    |   'empty' '(' xq ')'                                          #cond_empty
     |   'some' var 'in' xq (',' var 'in' xq)* 'satisfies' cond      #cond_satisfy
     |   '(' cond ')'                                                #cond_self
     |   cond 'and' cond                                             #cond_and
