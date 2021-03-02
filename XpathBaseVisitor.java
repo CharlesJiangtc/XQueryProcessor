@@ -1,4 +1,4 @@
-// Generated from E:/IntelliJ IDEA 2020.3.1/projects/ms1/XQP\Xpath.g4 by ANTLR 4.9.1
+// Generated from E:/IntelliJ IDEA 2020.3.1/projects/ms1test/src\Xpath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
