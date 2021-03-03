@@ -103,7 +103,7 @@ public class Xpath {
 
             DOMSource source = new DOMSource(doc);
 
-            String outputFileName = "Result_"+ inputFileName + ".xml";
+            String outputFileName = "Result.xml";
 
             File myFile = new File(outputFileName);
 
