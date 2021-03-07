@@ -11,6 +11,8 @@ returnClause : 'return' xq;
 
 var : '$' VARNAME;
 
+list : '[' VARNAME (',' VARNAME)* ']';
+
 Stringconstant : '"'+[a-zA-Z0-9,.?;! -]+'"';
 
 xq
@@ -24,6 +26,7 @@ xq
     |   '<' VARNAME '>' '{' xq '}' '<' '/' VARNAME '>'              #xq_tag
     |   forClause letClause? whereClause? returnClause              #xq_flwer
     |   letClause xq                                                #xq_let
+    |   'join' '(' xq ',' xq ',' list ',' list ')'                  #xq_join
     ;
 
 cond
