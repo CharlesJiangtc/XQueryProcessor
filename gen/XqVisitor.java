@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.HashSet;
+// import java.util.ArrayList;
+// import java.util.HashMap;
+// import java.util.Iterator;
+// import java.util.HashSet;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,6 +36,144 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     boolean rm = false;
     boolean all = false;
     boolean init = false;
+
+//rewrite
+    private String rewrite(XqueryParser.Xq_flwerContext ctx) {
+        System.out.println("Rewriting..................");
+
+        ArrayList<Joinee> joinees = new ArrayList<>();
+        Integer count = 0;
+        HashMap<String, Integer> varFamily = new HashMap<>();
+        HashMap<String, ArrayList<String>> joinVarList = new HashMap<>();
+
+        //classify for clauses
+        for (int i = 0; i < ctx.forClause().var().size(); i++) {
+            String var = ctx.forClause().var(i).getText();
+            System.out.println("var : " + var);
+            String parent = ctx.forClause().xq(i).getText().split("/")[0];
+            if (varFamily.containsKey(parent)) {
+                varFamily.put(var, varFamily.get(parent));
+                Joinee currJoinee = joinees.get(varFamily.get(parent));
+                currJoinee.vars.add(var);
+                currJoinee.fors.add(var + " in " + ctx.forClause().xq(i).getText());
+            }
+            else {
+                varFamily.put(var, count);
+                count += 1;
+                Joinee joinee = new Joinee();
+                joinee.vars.add(var);
+                joinee.fors.add(var + " in " + ctx.forClause().xq(i).getText());
+                joinees.add(joinee);
+            }
+        }
+
+        for (Joinee j : joinees) {
+            System.out.println("new joinee ----------------");
+            for (String s : j.fors) {
+                System.out.println(s);
+            }
+        }
+
+        //classify where clauses
+        System.out.println("start of where");
+        String[] conds = ctx.whereClause().cond().getText().split("and");
+        for (String s : conds) {
+            System.out.println(s);
+            int firstIndex = 0;
+            int secondIndex = 0;
+            String first = "";
+            String second = "";
+            if (s.indexOf('$', firstIndex+1) > 0) {
+                secondIndex = s.indexOf('$', firstIndex+1);
+            }
+            else if (s.charAt(0) == '$') {
+                secondIndex = s.indexOf('\"');
+            }
+            if (secondIndex > firstIndex + 2) {
+                first = s.substring(firstIndex, secondIndex-2);
+            }
+            second = s.substring(secondIndex);
+            System.out.println("first : " + first + " ; second : " + second);
+            if (first.charAt(0) == '$' && second.charAt(0) == '$') {
+                int firstFamily = varFamily.get(first);
+                int secondFamily = varFamily.get(second);
+                Joinee firstJoinee = joinees.get(firstFamily);
+                Joinee secondJoinee = joinees.get(secondFamily);
+
+                System.out.println("fIndex : " + firstFamily + " ; sIndex : " + secondFamily);
+                firstJoinee.targets.add(secondFamily);
+                if (firstJoinee.joinList.containsKey(secondFamily)) {
+                    firstJoinee.joinList.get(secondFamily).add(first);
+                }
+                else {
+                    ArrayList<String> tmp = new ArrayList<>();
+                    tmp.add(first);
+                    firstJoinee.joinList.put(secondFamily, tmp);
+                }
+
+                secondJoinee.targets.add(firstFamily);
+                if (secondJoinee.joinList.containsKey(firstFamily)) {
+                    secondJoinee.joinList.get(firstFamily).add(second);
+                }
+                else {
+                    ArrayList<String> tmp = new ArrayList<>();
+                    tmp.add(second);
+                    secondJoinee.joinList.put(firstFamily, tmp);
+                }
+                System.out.println("target length : " + firstJoinee.targets.size() + " , " + secondJoinee.targets.size());
+                System.out.println("map size : " + firstJoinee.joinList.size() + " , " + secondJoinee.joinList.size());
+            }
+            else {
+                String cmpVar = "";
+                String cmpConst = "";
+                if (first.charAt(0) == '$') {
+                    cmpVar = first;
+                    cmpConst = second;
+                }
+                else {
+                    cmpVar = second;
+                    cmpConst = first;
+                }
+                joinees.get(varFamily.get(cmpVar)).wheres.add(cmpVar + " eq " + cmpConst);
+                System.out.println("cmpVar : " + cmpVar + " ; context : " + cmpVar + " eq " + cmpConst);
+            }
+        }
+        System.out.println("end of where");
+
+        //generate return clause
+        String newReturn = "";
+        int ptr = 0;
+        String returnStr = ctx.returnClause().xq().getText();
+        boolean inVar = false;
+        Character endOfVarArr[] = {',', '/', '{', '}', '<', '>'};
+        HashSet<Character> endOfVar = new HashSet<>(Arrays.asList(endOfVarArr));
+        while (ptr < returnStr.length()) {
+            char curr = returnStr.charAt(ptr);
+            if (inVar && endOfVar.contains(curr)) {
+                newReturn += "/*";
+                inVar = false;
+            }
+            newReturn += curr;
+            if (!inVar && curr == '$') {
+                newReturn += "tuple/";
+                inVar = true;
+            }
+            ptr += 1;
+        }
+
+        System.out.println("!!!RETURN!!! " + newReturn);
+
+        //generate flwer by family
+        ArrayList<String> flwrs = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            flwrs.add(joinees.get(i).generateFLWR());
+            System.out.println(joinees.get(i).generateFLWR());
+        }
+
+
+
+        return "Done Rewriting";
+    }
 
 //join -----------------------------------------------------------------------------------------------------------------
 
@@ -211,6 +350,9 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXq_flwer(XqueryParser.Xq_flwerContext ctx){
+        System.out.println("in flwer");
+        System.out.println(rewrite(ctx));
+
         ArrayList<Node> prevResult = result;
         ArrayList<Node> curr = flwerHelper(0, ctx);
         result = prevResult;
