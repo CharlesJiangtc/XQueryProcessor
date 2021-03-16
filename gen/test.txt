@@ -1,1 +1,0 @@
-for $b in document("input")/book, $a in document("input")/entry, $tb in $b/title, $ta in $a/title where $tb eq $ta and $ta eq "jkl" return <book-with-prices> { $tb, <price-review>{ $a/price }</price-review>, <price>{ $b/price }</price> } </book-with-prices>

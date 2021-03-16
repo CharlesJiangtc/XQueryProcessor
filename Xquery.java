@@ -29,43 +29,44 @@ public class Xquery {
 
         Scanner scanner = new Scanner(inputFile);
 
-        System.out.println("=======starting queries=======");
-
+        System.out.println("=======starting query=======");
+        String query = "";
             while (scanner.hasNextLine()) {
-                String query = scanner.nextLine();
-                System.out.println("querying : ");
-                try {
-
-                    ANTLRInputStream antlrIS = new ANTLRInputStream(query);
-                    XqueryLexer xqLexer = new XqueryLexer(antlrIS);
-                    CommonTokenStream commonTS = new CommonTokenStream(xqLexer);
-                    XqueryParser xqParser = new XqueryParser(commonTS);
-                    ParseTree pTree = xqParser.xq();
-                    XqVisitor visitor = new XqVisitor();
-                    ArrayList<Node> result = visitor.visit(pTree);
-
-
-                    if (result != null) {
-                        System.out.println("query done. showing result for query. result size : " + result.size());
-                        System.out.println("---------------------");
-                            for (Node n : result) {
-                                if (n.getNodeType() == 2) {
-                                    System.out.println(n.getNodeValue());
-                                }
-                                System.out.println(nodeToString(n));
-                            }
-                            nodesToXML(result);
-                        System.out.println("query done. showing result for query. result size : " + result.size());
-                    }
-                } catch (Exception e) {
-                    System.out.println("error occurs in the query : " + query);
-                }
-                System.out.println("---------------------");
+                query += scanner.nextLine();
             }
+            System.out.println("querying : " + query);
+            try {
+
+                ANTLRInputStream antlrIS = new ANTLRInputStream(query);
+                XqueryLexer xqLexer = new XqueryLexer(antlrIS);
+                CommonTokenStream commonTS = new CommonTokenStream(xqLexer);
+                XqueryParser xqParser = new XqueryParser(commonTS);
+                ParseTree pTree = xqParser.xq();
+                XqVisitor visitor = new XqVisitor();
+                ArrayList<Node> result = visitor.visit(pTree);
+
+
+                if (result != null) {
+                    System.out.println("query done. showing result for query. result size : " + result.size());
+                    System.out.println("---------------------");
+                    for (Node n : result) {
+                        if (n.getNodeType() == 2) {
+                            System.out.println(n.getNodeValue());
+                        }
+                        System.out.println(nodeToString(n));
+                    }
+                        // nodesToXML(result);
+                    System.out.println("---------------------");
+                    System.out.println("All results shown. result size : " + result.size());
+                }
+            } catch (Exception e) {
+                System.out.println("error occurs in the query : " + query);
+            }
+            
         } catch (FileNotFoundException e) {
             System.out.println("File " + args[0] + " not found.");
         }
-        System.out.println("=======end of queries=======");
+        System.out.println("=======end of query=======");
     }
 
     private static String nodeToString(Node node) {
@@ -114,7 +115,8 @@ public class Xquery {
             System.out.println("result file generated. file name : " + outputFileName);
         }
         catch (Exception e) {
-            System.out.println("generating xml file failed.");
+            System.out.println("generating xml file failed. " + e);
+            e.printStackTrace();
         }
     }
 }

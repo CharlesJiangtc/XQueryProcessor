@@ -1,4 +1,4 @@
-// Generated from E:/IntelliJ IDEA 2020.3.1/projects/ms2/src\Xquery.g4 by ANTLR 4.9.1
+// Generated from C:/Users/charl/Desktop/XQP\Xquery.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -56,6 +56,16 @@ public interface XqueryListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVar(XqueryParser.VarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XqueryParser#list}.
+	 * @param ctx the parse tree
+	 */
+	void enterList(XqueryParser.ListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XqueryParser#list}.
+	 * @param ctx the parse tree
+	 */
+	void exitList(XqueryParser.ListContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code xq_flwer}
 	 * labeled alternative in {@link XqueryParser#xq}.
@@ -128,6 +138,18 @@ public interface XqueryListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitXq_ap(XqueryParser.Xq_apContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code xq_join}
+	 * labeled alternative in {@link XqueryParser#xq}.
+	 * @param ctx the parse tree
+	 */
+	void enterXq_join(XqueryParser.Xq_joinContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code xq_join}
+	 * labeled alternative in {@link XqueryParser#xq}.
+	 * @param ctx the parse tree
+	 */
+	void exitXq_join(XqueryParser.Xq_joinContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code xq_merge}
 	 * labeled alternative in {@link XqueryParser#xq}.
