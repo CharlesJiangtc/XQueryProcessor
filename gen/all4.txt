@@ -1,0 +1,1 @@
+for $a in doc("j_caesar.xml")//PERSONA, $a1 in $a/text(), $b in doc("j_caesar.xml")/PLAY, $b1 in $b//SPEAKER/text(), $b2 in $b/ACT/TITLE/text(), $c in doc("j_caesar.xml")//ACT/TITLE, $c1 in $c/text() where $a1 eq $b1 and $b2 eq "ACT III" and $b2 eq $c1 and $a1 eq "TREBONIUS" return <book>{$a/text(),$c/text()}</book>

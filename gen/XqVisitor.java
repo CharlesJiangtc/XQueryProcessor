@@ -1,19 +1,22 @@
-
-import java.io.IOException;
-import java.io.File;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
+// import java.io.IOException;
+// import java.io.File;
+// import java.io.OutputStreamWriter;
+// import java.io.PrintWriter;
+// import java.lang.reflect.Array;
 // import java.util.ArrayList;
 // import java.util.HashMap;
 // import java.util.Iterator;
 // import java.util.HashSet;
+import java.io.*;
 import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.*;
@@ -23,6 +26,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Entity;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 
 public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
@@ -36,144 +46,9 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     boolean rm = false;
     boolean all = false;
     boolean init = false;
-
-//rewrite
-    private String rewrite(XqueryParser.Xq_flwerContext ctx) {
-        System.out.println("Rewriting..................");
-
-        ArrayList<Joinee> joinees = new ArrayList<>();
-        Integer count = 0;
-        HashMap<String, Integer> varFamily = new HashMap<>();
-        HashMap<String, ArrayList<String>> joinVarList = new HashMap<>();
-
-        //classify for clauses
-        for (int i = 0; i < ctx.forClause().var().size(); i++) {
-            String var = ctx.forClause().var(i).getText();
-            System.out.println("var : " + var);
-            String parent = ctx.forClause().xq(i).getText().split("/")[0];
-            if (varFamily.containsKey(parent)) {
-                varFamily.put(var, varFamily.get(parent));
-                Joinee currJoinee = joinees.get(varFamily.get(parent));
-                currJoinee.vars.add(var);
-                currJoinee.fors.add(var + " in " + ctx.forClause().xq(i).getText());
-            }
-            else {
-                varFamily.put(var, count);
-                count += 1;
-                Joinee joinee = new Joinee();
-                joinee.vars.add(var);
-                joinee.fors.add(var + " in " + ctx.forClause().xq(i).getText());
-                joinees.add(joinee);
-            }
-        }
-
-        for (Joinee j : joinees) {
-            System.out.println("new joinee ----------------");
-            for (String s : j.fors) {
-                System.out.println(s);
-            }
-        }
-
-        //classify where clauses
-        System.out.println("start of where");
-        String[] conds = ctx.whereClause().cond().getText().split("and");
-        for (String s : conds) {
-            System.out.println(s);
-            int firstIndex = 0;
-            int secondIndex = 0;
-            String first = "";
-            String second = "";
-            if (s.indexOf('$', firstIndex+1) > 0) {
-                secondIndex = s.indexOf('$', firstIndex+1);
-            }
-            else if (s.charAt(0) == '$') {
-                secondIndex = s.indexOf('\"');
-            }
-            if (secondIndex > firstIndex + 2) {
-                first = s.substring(firstIndex, secondIndex-2);
-            }
-            second = s.substring(secondIndex);
-            System.out.println("first : " + first + " ; second : " + second);
-            if (first.charAt(0) == '$' && second.charAt(0) == '$') {
-                int firstFamily = varFamily.get(first);
-                int secondFamily = varFamily.get(second);
-                Joinee firstJoinee = joinees.get(firstFamily);
-                Joinee secondJoinee = joinees.get(secondFamily);
-
-                System.out.println("fIndex : " + firstFamily + " ; sIndex : " + secondFamily);
-                firstJoinee.targets.add(secondFamily);
-                if (firstJoinee.joinList.containsKey(secondFamily)) {
-                    firstJoinee.joinList.get(secondFamily).add(first);
-                }
-                else {
-                    ArrayList<String> tmp = new ArrayList<>();
-                    tmp.add(first);
-                    firstJoinee.joinList.put(secondFamily, tmp);
-                }
-
-                secondJoinee.targets.add(firstFamily);
-                if (secondJoinee.joinList.containsKey(firstFamily)) {
-                    secondJoinee.joinList.get(firstFamily).add(second);
-                }
-                else {
-                    ArrayList<String> tmp = new ArrayList<>();
-                    tmp.add(second);
-                    secondJoinee.joinList.put(firstFamily, tmp);
-                }
-                System.out.println("target length : " + firstJoinee.targets.size() + " , " + secondJoinee.targets.size());
-                System.out.println("map size : " + firstJoinee.joinList.size() + " , " + secondJoinee.joinList.size());
-            }
-            else {
-                String cmpVar = "";
-                String cmpConst = "";
-                if (first.charAt(0) == '$') {
-                    cmpVar = first;
-                    cmpConst = second;
-                }
-                else {
-                    cmpVar = second;
-                    cmpConst = first;
-                }
-                joinees.get(varFamily.get(cmpVar)).wheres.add(cmpVar + " eq " + cmpConst);
-                System.out.println("cmpVar : " + cmpVar + " ; context : " + cmpVar + " eq " + cmpConst);
-            }
-        }
-        System.out.println("end of where");
-
-        //generate return clause
-        String newReturn = "";
-        int ptr = 0;
-        String returnStr = ctx.returnClause().xq().getText();
-        boolean inVar = false;
-        Character endOfVarArr[] = {',', '/', '{', '}', '<', '>'};
-        HashSet<Character> endOfVar = new HashSet<>(Arrays.asList(endOfVarArr));
-        while (ptr < returnStr.length()) {
-            char curr = returnStr.charAt(ptr);
-            if (inVar && endOfVar.contains(curr)) {
-                newReturn += "/*";
-                inVar = false;
-            }
-            newReturn += curr;
-            if (!inVar && curr == '$') {
-                newReturn += "tuple/";
-                inVar = true;
-            }
-            ptr += 1;
-        }
-
-        System.out.println("!!!RETURN!!! " + newReturn);
-
-        //generate flwer by family
-        ArrayList<String> flwrs = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            flwrs.add(joinees.get(i).generateFLWR());
-            System.out.println(joinees.get(i).generateFLWR());
-        }
-
-
-
-        return "Done Rewriting";
-    }
+    boolean rewrited = false;
+    rewriter rewriter = new rewriter();
+    int test=0;
 
 //join -----------------------------------------------------------------------------------------------------------------
 
@@ -185,18 +60,43 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
         return children;
     }
 
+    private void printNodes (ArrayList<Node> nodes) {
+        for (Node n : nodes) {
+            StringWriter sw = new StringWriter();
+            try {
+                Transformer t = TransformerFactory.newInstance().newTransformer();
+                t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                t.setOutputProperty(OutputKeys.INDENT, "yes");
+                t.transform(new DOMSource(n), new StreamResult(sw));
+                System.out.println(sw.toString());
+            } catch (TransformerException te) {
+                System.out.println("nodeToString Transformer Exception");
+            }
+        }
+    }
+
     @Override
     public ArrayList<Node> visitXq_join(XqueryParser.Xq_joinContext ctx) {
-
+// System.out.println("in join");
         //visit left and right xq
         ArrayList<Node> prev = result;
         ArrayList<Node> left = visit(ctx.xq(0));
+        // System.out.println("=========left============");
+        // System.out.println(ctx.xq(0).getText());
+        // System.out.println("=========left============");
+        // printNodes(left);
         result = prev;
         ArrayList<Node> right = visit(ctx.xq(1));
+        // System.out.println("=========right============");
+        // System.out.println(ctx.xq(1).getText());
+        // System.out.println("=========right============");
+        // printNodes(right);
+        // System.out.println("right size : " + right.size());
 
         //visit left and right list
         ArrayList<String> leftKey = new ArrayList<String>();
         ArrayList<String> rightKey = new ArrayList<String>();
+
         for (int i = 0; i < ctx.list(0).VARNAME().size(); i++) {
             leftKey.add(ctx.list(0).VARNAME(i).getText());
             rightKey.add(ctx.list(1).VARNAME(i).getText());
@@ -207,24 +107,31 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
         for (int j = 0; j < left.size(); j++) {
             String key = "";
             ArrayList<Node> currChildren = getChildren(left.get(j));
+            // printNodes(currChildren);
             for (String s : leftKey) {
+                // System.out.println("s : " + s);
                 for (int k = 0; k < currChildren.size(); k++) {
+                    // System.out.println("currChildren : " + currChildren.get(k).getNodeName());
                     if (currChildren.get(k).getNodeName().equals(s)) {
                         key += "@" + currChildren.get(k).getFirstChild().getTextContent();
                     }
                 }
             }
+            // System.out.println()
             if (leftHash.containsKey(key)) {
                 leftHash.get(key).add(left.get(j));
             }
-            else {
+            else if (key.length() != 0){
                 ArrayList<Node> val = new ArrayList<Node>();
                 val.add(left.get(j));
                 leftHash.put(key, val);
             }
         }
+        // for (String s : leftHash.keySet()) {
+        //     System.out.println("key : " + s + "; value : " + leftHash.get(s).size());
+        //     printNodes(leftHash.get(s));
+        // }
 
-        //hash join with right
         ArrayList<Node> joinResult = new ArrayList<Node>();
         for (int p = 0; p < right.size(); p++) {
             String key = "";
@@ -238,6 +145,17 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
             }
             if (leftHash.containsKey(key)) {
                 for (Node n : leftHash.get(key)) {
+                    try {
+                        if (!init) {
+                            DocumentBuilderFactory dbf1 = DocumentBuilderFactory.newInstance();
+                            DocumentBuilder db1 = dbf1.newDocumentBuilder();
+                            output = db1.newDocument();
+                            init = true;
+                        }
+                    }
+                    catch(Exception e){
+
+                    }
                     //join
                     ArrayList<Node> leftChildren = getChildren(n);
                     leftChildren.addAll(currChildren);
@@ -252,9 +170,10 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
                 }
             }
         }
-
+        // System.out.println("result size : " + joinResult.size() + "result : ");
+        // printNodes(joinResult);
         result = joinResult;
-        return result;
+        return joinResult;
     }
 
 
@@ -295,10 +214,15 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     //done
     @Override
     public ArrayList<Node> visitXq_merge(XqueryParser.Xq_mergeContext ctx){
+        // System.out.println("in xq merge : " + ctx.xq(0).getText() + " ; " + ctx.xq(1).getText());
         ArrayList<Node> temp = result;
         ArrayList<Node> left = visit(ctx.xq(0));
+        // System.out.println("left resut : ");
+        // printNodes(left);
         result = temp;
         ArrayList<Node> right = visit(ctx.xq(1));
+        // System.out.println("right resut : ");
+        // printNodes(right);
         left.addAll(right);
         result = left;
         return left;
@@ -307,6 +231,8 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     //done
     @Override
     public ArrayList<Node> visitXq_rpchildren(XqueryParser.Xq_rpchildrenContext ctx){
+        // System.out.println("!!!!!!!!!!!!@@@@@@@@@@!!!!!!!!!!!!!!!!");
+        // System.out.println("in rpchildren : " + ctx.xq().getText() + " ; " + ctx.rp().getText());
         result = visit(ctx.xq());
         rm = true;
         return visit(ctx.rp());
@@ -336,11 +262,14 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
 
         }
         ArrayList<Node> temp = new ArrayList<>();
+        // printNodes(result);
         ArrayList<Node> ret = visit(ctx.xq());
+        // printNodes(ret);
         Node create = output.createElement(ctx.VARNAME(0).getText());
         for(Node r:ret){
             if(r!=null) {
                 Node child = output.importNode(r, true);
+                // System.out.println(child);
                 create.appendChild(child);
             }
         }
@@ -350,16 +279,42 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXq_flwer(XqueryParser.Xq_flwerContext ctx){
-        System.out.println("in flwer");
-        System.out.println(rewrite(ctx));
+// System.out.println("in flwer");
 
-        ArrayList<Node> prevResult = result;
-        ArrayList<Node> curr = flwerHelper(0, ctx);
-        result = prevResult;
-        return curr;
+        if(rewriter.Needrewrite(ctx) && rewrited == false){
+            String reString = rewriter.rewritr(ctx);
+            if(reString == ""){
+                ArrayList<Node> prevResult = result;
+                ArrayList<Node> curr = flwerHelper(0, ctx);
+                result = prevResult;
+                return curr;
+            }
+            else{
+                System.out.println("---------------------");
+                System.out.println("REWRITTEN QUERY : " + reString);
+                System.out.println("---------------------");
+                ANTLRInputStream antlrIS = new ANTLRInputStream(reString);
+                XqueryLexer xqLexer = new XqueryLexer(antlrIS);
+                CommonTokenStream commonTS = new CommonTokenStream(xqLexer);
+                XqueryParser xqParser = new XqueryParser(commonTS);
+                ParseTree pTree = xqParser.xq();
+                XqVisitor visitor = new XqVisitor();
+                visitor.rewrited = true;
+                ArrayList<Node> reresult = visitor.visit(pTree);
+                //ArrayList<Node> reresult = new ArrayList<>();
+                return reresult;
+            }
+        }
+        else {
+            ArrayList<Node> prevResult = result;
+            ArrayList<Node> curr = flwerHelper(0, ctx);
+            result = prevResult;
+            return curr;
+        }
     }
 
     private ArrayList<Node> flwerHelper(int k, XqueryParser.Xq_flwerContext ctx) {
+        //not rewriting
         if (k == ctx.forClause().var().size()) {
             if (ctx.letClause() != null) {
                 visit(ctx.letClause());
@@ -384,12 +339,13 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
                 tmp.add(xqResult.get(i));
                 result = tmp;
                 varHash.put(ctx.forClause().var(k).getText(), tmp);
-                allResults.addAll(flwerHelper(k+1, ctx));
+                allResults.addAll(flwerHelper(k + 1, ctx));
             }
             result = prevResult;
             return allResults;
         }
     }
+
 
     //done
     @Override
@@ -412,6 +368,7 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> left = visit(ctx.xq(0));
         result = tp;
         ArrayList<Node> right = visit(ctx.xq(1));
+
         for (Node l : left) {
             for (Node s : right) {
                 if (l.isEqualNode(s)) {
@@ -539,7 +496,7 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     }
 
 
-//end of cond-----------------------------------------------------------------------------------------------------------
+    //end of cond-------------------------------------------------------------------------------------------------------
     //done
     @Override
     public ArrayList<Node> visitWhereClause(XqueryParser.WhereClauseContext ctx){
@@ -566,6 +523,7 @@ public class XqVisitor extends XqueryBaseVisitor<ArrayList<Node>>{
     //done
     @Override
     public ArrayList<Node> visitReturnClause(XqueryParser.ReturnClauseContext ctx){
+        // System.out.println("return clause : " + ctx.xq().getText());
         return visit(ctx.xq());
     }
 

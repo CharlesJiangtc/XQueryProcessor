@@ -20,9 +20,9 @@ xq
     |   Stringconstant                                              #xq_Stringconstant
     |   ap                                                          #xq_ap
     |   '(' xq ')'                                                  #xq_self
-    |   xq ',' xq                                                   #xq_merge
     |   xq '/' rp                                                   #xq_rpchildren
     |   xq '//' rp                                                  #xq_rpall
+    |   xq ',' xq                                                   #xq_merge
     |   '<' VARNAME '>' '{' xq '}' '<' '/' VARNAME '>'              #xq_tag
     |   forClause letClause? whereClause? returnClause              #xq_flwer
     |   letClause xq                                                #xq_let

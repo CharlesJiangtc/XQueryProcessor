@@ -894,11 +894,11 @@ public class XqueryParser extends Parser {
 						_localctx = new Xq_mergeContext(new XqContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_xq);
 						setState(118);
-						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(119);
 						match(T__2);
 						setState(120);
-						xq(8);
+						xq(6);
 						}
 						break;
 					case 2:
@@ -906,7 +906,7 @@ public class XqueryParser extends Parser {
 						_localctx = new Xq_rpchildrenContext(new XqContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_xq);
 						setState(121);
-						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
+						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
 						setState(122);
 						match(T__12);
 						setState(123);
@@ -918,7 +918,7 @@ public class XqueryParser extends Parser {
 						_localctx = new Xq_rpallContext(new XqContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_xq);
 						setState(124);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(125);
 						match(T__13);
 						setState(126);
@@ -2294,11 +2294,11 @@ public class XqueryParser extends Parser {
 	private boolean xq_sempred(XqContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 7);
-		case 1:
-			return precpred(_ctx, 6);
-		case 2:
 			return precpred(_ctx, 5);
+		case 1:
+			return precpred(_ctx, 7);
+		case 2:
+			return precpred(_ctx, 6);
 		}
 		return true;
 	}
@@ -2374,8 +2374,8 @@ public class XqueryParser extends Parser {
 		"ij\5\16\b\4jw\3\2\2\2kl\7\25\2\2lm\7\r\2\2mn\5\16\b\2no\7\5\2\2op\5\16"+
 		"\b\2pq\7\5\2\2qr\5\f\7\2rs\7\5\2\2st\5\f\7\2tu\7\16\2\2uw\3\2\2\2vL\3"+
 		"\2\2\2vN\3\2\2\2vO\3\2\2\2vP\3\2\2\2vT\3\2\2\2v_\3\2\2\2vh\3\2\2\2vk\3"+
-		"\2\2\2w\u0083\3\2\2\2xy\f\t\2\2yz\7\5\2\2z\u0082\5\16\b\n{|\f\b\2\2|}"+
-		"\7\17\2\2}\u0082\5\30\r\2~\177\f\7\2\2\177\u0080\7\20\2\2\u0080\u0082"+
+		"\2\2\2w\u0083\3\2\2\2xy\f\7\2\2yz\7\5\2\2z\u0082\5\16\b\b{|\f\t\2\2|}"+
+		"\7\17\2\2}\u0082\5\30\r\2~\177\f\b\2\2\177\u0080\7\20\2\2\u0080\u0082"+
 		"\5\30\r\2\u0081x\3\2\2\2\u0081{\3\2\2\2\u0081~\3\2\2\2\u0082\u0085\3\2"+
 		"\2\2\u0083\u0081\3\2\2\2\u0083\u0084\3\2\2\2\u0084\17\3\2\2\2\u0085\u0083"+
 		"\3\2\2\2\u0086\u0087\b\t\1\2\u0087\u0088\5\16\b\2\u0088\u0089\7\26\2\2"+
