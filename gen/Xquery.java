@@ -32,10 +32,10 @@ public class Xquery {
         System.out.println("=======starting query=======");
         String query = "";
             while (scanner.hasNextLine()) {
-                query += scanner.nextLine();
-            }
-            System.out.println("querying : " + query);
-            try {
+                query += scanner.nextLine() + " ";
+
+                System.out.println("querying : " + query);
+                //try {
 
                 ANTLRInputStream antlrIS = new ANTLRInputStream(query);
                 XqueryLexer xqLexer = new XqueryLexer(antlrIS);
@@ -55,14 +55,14 @@ public class Xquery {
                         }
                         System.out.println(nodeToString(n));
                     }
-                        // nodesToXML(result);
+                    nodesToXML(result);
                     System.out.println("---------------------");
                     System.out.println("All results shown. result size : " + result.size());
                 }
-            } catch (Exception e) {
-                System.out.println("error occurs in the query : " + query);
+                //} catch (Exception e) {
+                //    System.out.println("error occurs in the query : " + query);
+                //}
             }
-            
         } catch (FileNotFoundException e) {
             System.out.println("File " + args[0] + " not found.");
         }
@@ -87,11 +87,12 @@ public class Xquery {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.newDocument();
-            /*Element root = doc.createElement("Result");
-            doc.appendChild(root);*/
+            Element root = doc.createElement("NodesReturned");
+            doc.appendChild(root);
 
             for (Node n : nodes) {
-                doc.appendChild(doc.importNode(n,true));
+                Node temp = doc.importNode(n,true);
+                root.appendChild(temp);
             }
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
